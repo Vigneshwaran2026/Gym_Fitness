@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#000000">
+  <title>404 - Page Not Found | Stackly Fitness</title>
+  <style>
+
+    html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+    :root {
+      --Neon: #DEFB02;
+      --Black: #000000;
+      --Gray: #F6F6F6;
+      --White: #FFFFFF;
+      --Red: #F30A46;
+      --Title: #111111;
+      --Paragraph: #646464;
+      --Border: #EAEAEA;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { min-height: 100%; }
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--White);
+      background:
+        radial-gradient(ellipse at 50% 52%, rgba(222,251,2,.14) 0, rgba(222,251,2,.04) 23%, transparent 47%),
+        radial-gradient(ellipse at 0% 100%, rgba(222,251,2,.2) 0, transparent 28%),
+        radial-gradient(ellipse at 100% 40%, rgba(222,251,2,.09) 0, transparent 28%),
+        #030402;
+      position: relative;
+      isolation: isolate;
+    }
+
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      z-index: -1;
+      pointer-events: none;
+      border-radius: 50%;
+      background: rgba(222,251,2,.09);
+      filter: blur(.2px);
+    }
+    body::before { width: 330px; height: 330px; left: -185px; top: 85px; }
+    body::after { width: 390px; height: 390px; right: -220px; bottom: -190px; }
+
+    a { color: inherit; text-decoration: none; }
+    .page-shell { min-height: 100vh; display: flex; flex-direction: column; }
+    .site-header {
+      width: min(1360px, calc(100% - 64px));
+      margin: 0 auto;
+      min-height: 108px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand { display: inline-flex; align-items: center; min-width: 0; }
+    .brand img { display: block; width: 185px; max-height: 70px; object-fit: contain; }
+    .brand-fallback { display: none; align-items: center; gap: 10px; font-size: 27px; font-weight: 900; letter-spacing: -1px; color: var(--Neon); }
+    .brand-mark { width: 42px; height: 42px; display: grid; place-items: center; border: 2px solid var(--Neon); border-radius: 13px; font-size: 22px; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .header-home, .header-back {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      min-height: 48px; padding: 0 22px; border: 1px solid var(--Neon); border-radius: 30px;
+      color: var(--White); font-size: 14px; font-weight: 800; transition: .2s ease;
+      background: transparent; cursor: pointer; font-family: inherit;
+    }
+    .header-back { border-color: #454545; }
+    .header-back svg { width: 18px; height: 18px; stroke: var(--Neon); }
+    .header-back:hover { border-color: var(--Neon); background: rgba(222,251,2,.08); transform: translateY(-2px); }
+    .header-home svg { width: 18px; height: 18px; stroke: var(--Neon); }
+    .header-home:hover { background: var(--Neon); color: var(--Black); transform: translateY(-2px); }
+    .header-home:hover svg { stroke: var(--Black); }
+
+    main {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 16px 24px 65px; text-align: center;
+    }
+    .error-content { width: min(850px, 100%); position: relative; }
+    .error-number {
+      position: relative; display: flex; justify-content: center; align-items: center;
+      gap: clamp(0px, 1.3vw, 20px); margin: 0 auto 12px;
+      font-size: clamp(150px, 25vw, 320px); line-height: .9; font-weight: 1000;
+      letter-spacing: -.075em; color: var(--White); text-shadow: 0 14px 35px rgba(0,0,0,.35);
+    }
+    .error-number .zero {
+      color: var(--Neon); position: relative; display: inline-block;
+      text-shadow: 0 0 40px rgba(222,251,2,.15);
+    }
+    .dumbbell {
+      position: absolute; width: clamp(145px, 25vw, 300px); height: auto;
+      left: 50%; top: 63%; transform: translate(-50%, -50%) rotate(-3deg);
+      filter: drop-shadow(0 12px 16px rgba(0,0,0,.75));
+    }
+    .spark { position: absolute; width: 8px; height: 35px; border-radius: 10px; background: var(--Neon); top: 4%; left: 50%; transform: translateX(-50%); }
+    .spark.left { top: 10%; left: 39%; transform: rotate(-35deg); }
+    .spark.right { top: 10%; left: 61%; transform: rotate(35deg); }
+    h1 { font-size: clamp(30px, 4.3vw, 56px); line-height: 1.12; font-weight: 900; letter-spacing: -1.3px; margin-top: 24px; }
+    h1 span { color: var(--Neon); }
+    .description {
+      max-width: 650px; margin: 24px auto 0; color: #bdbdbd;
+      font-size: clamp(15px, 1.6vw, 21px); line-height: 1.75;
+    }
+    .primary-home {
+      display: inline-flex; align-items: center; justify-content: center; gap: 13px;
+      min-width: 270px; min-height: 62px; margin-top: 32px; padding: 15px 28px;
+      border-radius: 15px; background: var(--Neon); color: var(--Black);
+      font-size: 17px; font-weight: 900; box-shadow: 0 12px 35px rgba(222,251,2,.12);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .primary-home svg { width: 21px; height: 21px; fill: currentColor; }
+    .primary-home:hover { transform: translateY(-3px); box-shadow: 0 16px 38px rgba(222,251,2,.22); }
+    .social-links { display: flex; justify-content: center; gap: 12px; margin-top: 29px; }
+    .social-links a {
+      width: 38px; height: 38px; border: 1px solid #33352a; border-radius: 50%;
+      display: grid; place-items: center; color: #bdbdbd; transition: .2s ease;
+    }
+    .social-links svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+    .social-links a:hover { color: var(--Neon); border-color: var(--Neon); transform: translateY(-2px); }
+    .wave {
+      position: fixed; left: -2%; right: -2%; top: 55%; width: 104%; height: 190px;
+      z-index: -1; pointer-events: none; opacity: .7;
+    }
+    .dot-pattern {
+      position: fixed; width: 110px; height: 150px; opacity: .24; z-index: -1; pointer-events: none;
+      background-image: radial-gradient(#777 2px, transparent 2.5px); background-size: 24px 24px;
+    }
+    .dot-left { top: 27%; left: 7%; }
+    .dot-right { top: 49%; right: 6%; }
+    footer { text-align: center; padding: 0 20px 22px; color: #666; font-size: 11px; }
+
+    @media (max-width: 650px) {
+      .site-header { width: calc(100% - 32px); min-height: 82px; }
+      .brand img { width: 135px; }
+      .header-home, .header-back { min-height: 40px; padding: 0 11px; font-size: 11px; gap: 6px; }
+      .header-actions { gap: 7px; }
+      main { padding: 25px 18px 45px; }
+      .error-number { font-size: clamp(130px, 37vw, 220px); margin-bottom: 20px; }
+      .dumbbell { width: clamp(130px, 38vw, 200px); }
+      .spark { height: 25px; width: 6px; }
+      h1 { margin-top: 18px; letter-spacing: -.6px; }
+      .description { margin-top: 16px; }
+      .primary-home { min-width: 225px; min-height: 55px; font-size: 15px; margin-top: 25px; }
+      .dot-left { left: -25px; }
+      .dot-right { right: -25px; }
+      .wave { top: 50%; }
+      footer { padding-bottom: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Stackly home">
+        <img src="image/logo/logo.webp" alt="Stackly" id="stacklyLogo">
+        <span class="brand-fallback" id="brandFallback"><span class="brand-mark">S</span> STACKLY</span>
+      </a>
+      <div class="header-actions">
+        <button class="header-back" type="button" id="backButton">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+          Back
+        </button>
+        <a class="header-home" href="index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v11h5v-6h4v6h5V9"/></svg>
+          Back to Home
+        </a>
+      </div>
+    </header>
+
+    <div class="dot-pattern dot-left"></div>
+    <div class="dot-pattern dot-right"></div>
+    <svg class="wave" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 170 C120 10 190 20 315 70 S510 160 655 78 S820 160 980 110 S1110 0 1240 35 S1370 65 1440 20" fill="none" stroke="#DEFB02" stroke-width="2.5"/>
+    </svg>
+
+    <main>
+      <section class="error-content" aria-labelledby="error-title">
+        <div class="error-number" aria-label="404">
+          <span>4</span><span class="zero">0</span><span>4</span>
+          <span class="spark"></span><span class="spark left"></span><span class="spark right"></span>
+          <svg class="dumbbell" viewBox="0 0 300 105" role="img" aria-label="Dumbbell illustration">
+            <defs>
+              <linearGradient id="plate" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stop-color="#414414"/><stop offset=".32" stop-color="#10110a"/><stop offset=".58" stop-color="#33351b"/><stop offset="1" stop-color="#050505"/>
+              </linearGradient>
+              <linearGradient id="bar" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="#f4f4f4"/><stop offset=".4" stop-color="#777"/><stop offset=".6" stop-color="#eee"/><stop offset="1" stop-color="#393939"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="150" cy="92" rx="132" ry="9" fill="#000" opacity=".42"/>
+            <rect x="47" y="43" width="206" height="20" rx="8" fill="url(#bar)"/>
+            <rect x="35" y="47" width="230" height="11" rx="5" fill="#b8b8a0"/>
+            <g fill="url(#plate)" stroke="#64683a" stroke-width="2">
+              <rect x="28" y="20" width="22" height="66" rx="7"/>
+              <rect x="42" y="12" width="25" height="82" rx="8"/>
+              <rect x="59" y="25" width="18" height="57" rx="6"/>
+              <rect x="250" y="25" width="18" height="57" rx="6"/>
+              <rect x="266" y="12" width="25" height="82" rx="8"/>
+              <rect x="290" y="20" width="8" height="66" rx="4"/>
+            </g>
+            <rect x="12" y="43" width="25" height="20" rx="5" fill="url(#bar)"/>
+            <rect x="265" y="43" width="25" height="20" rx="5" fill="url(#bar)"/>
+            <path d="M48 20v65M65 24v57M270 24v57" stroke="#d7d9a6" stroke-width="2" opacity=".28"/>
+          </svg>
+        </div>
+        <h1 id="error-title">Oops! <span>Page Not Found</span></h1>
+        <p class="description">The page you’re looking for doesn’t exist or has been moved.<br>Let’s get you back on track.</p>
+        <a class="primary-home" href="index.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 11h3v10h5v-6h4v6h5V11h3L12 3z"/></svg>
+          Back to Home
+        </a>
+      </section>
+    </main>
+    <footer>© <span id="year"></span> Stackly Fitness. Keep moving forward.</footer>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    document.getElementById("backButton").addEventListener("click", function () {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
+    document.getElementById("stacklyLogo").addEventListener("error", function () {
+      this.style.display = "none";
+      document.getElementById("brandFallback").style.display = "inline-flex";
+    });
+  </script>
+</body>
+</html>

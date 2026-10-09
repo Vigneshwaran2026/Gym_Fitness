@@ -1,0 +1,875 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | YourBrand</title>
+
+<style>
+:root {
+    --Neon: #DEFB02;
+    --Black: #000000;
+    --Gray: #F6F6F6;
+    --White: #FFFFFF;
+    --Red: #F30A46;
+    --Title: #111111;
+    --Paragraph: #646464;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: var(--Title);
+    background: var(--Gray);
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+/* Animated background */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.login-page::before,
+.login-page::after {
+    content: "";
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    background: var(--Neon);
+    filter: blur(100px);
+    opacity: 0.28;
+    z-index: -1;
+    animation: floatGlow 9s ease-in-out infinite alternate;
+}
+
+.login-page::before {
+    top: 8%;
+    left: -160px;
+}
+
+.login-page::after {
+    bottom: 0;
+    right: -150px;
+    animation-delay: 2s;
+}
+
+@keyframes floatGlow {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(45px, -35px) scale(1.12); }
+}
+
+/* Header */
+.login-header {
+    width: 100%;
+    padding: 24px 6%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 23px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.brand-mark {
+    width: 39px;
+    height: 39px;
+    border-radius: 12px;
+    background: var(--Neon);
+    color: var(--Black);
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    font-weight: 900;
+    box-shadow: 0 5px 18px rgba(222, 251, 2, 0.35);
+}
+
+.back-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.3s ease;
+}
+
+.back-home:hover {
+    color: var(--Paragraph);
+    transform: translateX(-4px);
+}
+
+/* Main layout */
+.login-main {
+    flex: 1;
+    width: 100%;
+    padding: 30px 20px 55px;
+    display: grid;
+    place-items: center;
+}
+
+.login-layout {
+    width: 100%;
+    max-width: 1080px;
+    display: grid;
+    grid-template-columns: 1fr 0.9fr;
+    align-items: center;
+    gap: 65px;
+}
+
+/* Intro section */
+.login-intro {
+    animation: slideInLeft 0.8s ease both;
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 14px;
+    background: var(--White);
+    border: 1px solid #e8e8e8;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+}
+
+.eyebrow span {
+    width: 9px;
+    height: 9px;
+    background: var(--Neon);
+    border: 1px solid var(--Black);
+    border-radius: 50%;
+}
+
+.login-intro h1 {
+    font-size: clamp(40px, 5vw, 67px);
+    line-height: 1.04;
+    letter-spacing: -3px;
+    font-weight: 900;
+    margin-bottom: 24px;
+}
+
+.login-intro h1 .highlight {
+    position: relative;
+    display: inline-block;
+    z-index: 0;
+}
+
+.login-intro h1 .highlight::after {
+    content: "";
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: var(--Neon);
+    z-index: -1;
+    transform: rotate(-1.5deg);
+}
+
+.login-intro p {
+    max-width: 440px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--Paragraph);
+}
+
+.feature-list {
+    display: grid;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.feature-icon {
+    width: 27px;
+    height: 27px;
+    border-radius: 8px;
+    background: var(--Neon);
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+}
+
+/* Login card */
+.login-card {
+    background: var(--White);
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 24px;
+    padding: 38px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.09);
+    animation: slideInRight 0.8s ease both;
+    position: relative;
+}
+
+.login-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 35px;
+    right: 35px;
+    height: 4px;
+    border-radius: 0 0 10px 10px;
+    background: var(--Neon);
+}
+
+.card-heading {
+    margin-bottom: 27px;
+}
+
+.card-heading h2 {
+    font-size: 29px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+}
+
+.card-heading p {
+    color: var(--Paragraph);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Form controls */
+.form-group {
+    margin-bottom: 19px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 9px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.input-wrap {
+    position: relative;
+}
+
+.form-control {
+    width: 100%;
+    min-height: 51px;
+    padding: 13px 15px;
+    border: 1px solid #dedede;
+    border-radius: 10px;
+    background: #fff;
+    outline: none;
+    color: var(--Title);
+    transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.form-control:focus {
+    border-color: var(--Black);
+    box-shadow: 0 0 0 3px rgba(222, 251, 2, 0.55);
+}
+
+.form-control.invalid {
+    border-color: var(--Red);
+    box-shadow: 0 0 0 2px rgba(243, 10, 70, 0.08);
+}
+
+.form-control.valid {
+    border-color: #278447;
+}
+
+.password-input {
+    padding-right: 78px;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 13px;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: var(--Paragraph);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.toggle-password:hover {
+    color: var(--Black);
+}
+
+.field-error {
+    display: block;
+    min-height: 0;
+    margin-top: 6px;
+    color: var(--Red);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.field-error:empty {
+    display: none;
+}
+
+.form-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 2px 0 23px;
+    font-size: 12px;
+}
+
+.remember {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--Paragraph);
+}
+
+.remember input {
+    accent-color: var(--Black);
+    width: 15px;
+    height: 15px;
+}
+
+.password-hint {
+    margin-top: 7px;
+    font-size: 11px;
+    color: var(--Paragraph);
+    line-height: 1.5;
+}
+
+.login-button {
+    width: 100%;
+    min-height: 53px;
+    border: 2px solid var(--Black);
+    border-radius: 10px;
+    background: var(--Neon);
+    color: var(--Black);
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: transform 0.25s, background 0.25s, box-shadow 0.25s;
+}
+
+.login-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 0 var(--Black);
+}
+
+.login-button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.login-button:disabled {
+    opacity: 0.7;
+    cursor: wait;
+    transform: none;
+    box-shadow: none;
+}
+
+.form-status {
+    margin-top: 15px;
+    padding: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.form-status.error {
+    color: var(--Red);
+}
+
+.form-status.success {
+    color: #247a3d;
+}
+
+.login-footer {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eeeeee;
+    color: var(--Paragraph);
+    font-size: 11px;
+    line-height: 1.7;
+    text-align: center;
+}
+
+/* Animations */
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px) translateY(10px); }
+    to { opacity: 1; transform: translateX(0) translateY(0); }
+}
+
+@media (max-width: 850px) {
+    .login-layout {
+        max-width: 550px;
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+
+    .login-intro {
+        text-align: center;
+    }
+
+    .login-intro p {
+        margin: auto;
+    }
+
+    .feature-list {
+        display: none;
+    }
+
+    .eyebrow {
+        margin-bottom: 18px;
+    }
+
+    .login-intro h1 {
+        font-size: clamp(38px, 8vw, 54px);
+    }
+}
+
+@media (max-width: 480px) {
+    .login-header {
+        padding: 18px;
+    }
+
+    .brand {
+        font-size: 19px;
+    }
+
+    .brand-mark {
+        width: 34px;
+        height: 34px;
+    }
+
+    .back-home {
+        font-size: 12px;
+    }
+
+    .login-main {
+        padding: 20px 15px 35px;
+    }
+
+    .login-card {
+        padding: 30px 22px;
+        border-radius: 18px;
+    }
+
+    .card-heading h2 {
+        font-size: 26px;
+    }
+
+    .login-intro h1 {
+        letter-spacing: -2px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+
+.create-account {
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid #eeeeee;
+    text-align: center;
+}
+
+.create-account p {
+    color: var(--Paragraph);
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.create-account-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    color: var(--Black);
+    background: var(--White);
+    border: 1px solid var(--Black);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.create-account-link:hover {
+    background: var(--Neon);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 var(--Black);
+}
+
+.create-account-link span {
+    transition: transform 0.3s ease;
+}
+
+.create-account-link:hover span {
+    transform: translateX(4px);
+}
+
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.brand-logo {
+    width: 200px;
+    height: 55px;
+    object-fit: contain;
+    display: block;
+}
+
+@media (max-width: 480px) {
+    .brand-logo {
+        width: 120px;
+        height: 42px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-page">
+
+    <!-- Header / Logo -->
+    <header class="login-header">
+    <a href="index.html" class="brand" aria-label="Home">
+    <img src="image/logo/logo.webp" alt="Logo" class="brand-logo">
+</a>
+        <a href="index.html" class="back-home">
+            <span aria-hidden="true">←</span> Back to Home
+        </a>
+    </header>
+
+    <main class="login-main">
+        <div class="login-layout">
+
+            <!-- Intro -->
+            <section class="login-intro">
+                <div class="eyebrow">
+                    <span></span> Secure Access Portal
+                </div>
+
+                <h1>
+                    Welcome<br>
+                    <span class="highlight">Back.</span>
+                </h1>
+
+                <p>
+                    Sign in to access your workspace. Select your role,
+                    enter your credentials, and continue to your dashboard.
+                </p>
+
+                <div class="feature-list">
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+                        Simple role-based navigation
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+                        Clean and responsive workspace
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+                        Modern, easy-to-use interface
+                    </div>
+                </div>
+            </section>
+
+            <!-- Login form -->
+            <section class="login-card">
+                <div class="card-heading">
+                    <h2>Sign In</h2>
+                    <p>Enter your details to continue.</p>
+                </div>
+
+                <form id="loginForm" novalidate>
+
+                    <div class="form-group">
+                        <label for="loginRole">Login As *</label>
+                        <select class="form-control" id="loginRole" required>
+                            <option value="">Select your role</option>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                        </select>
+                        <small class="field-error" id="roleError"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address *</label>
+                        <input
+                            class="form-control"
+                            id="loginEmail"
+                            type="email"
+                            placeholder="name@example.com"
+                            autocomplete="username"
+                            maxlength="254"
+                            required
+                        >
+                        <small class="field-error" id="emailError"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Password *</label>
+                        <div class="input-wrap">
+                            <input
+                                class="form-control password-input"
+                                id="loginPassword"
+                                type="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                maxlength="128"
+                                required
+                            >
+                            <button
+                                class="toggle-password"
+                                type="button"
+                                id="togglePassword"
+                                aria-label="Show password"
+                            >SHOW</button>
+                        </div>
+                        <small class="field-error" id="passwordError"></small>
+                        <p class="password-hint">
+                            Minimum 8 characters, including uppercase,
+                            lowercase, a number, and a special character.
+                        </p>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember">
+                            <input type="checkbox" id="rememberMe">
+                            Remember me
+                        </label>
+                    </div>
+
+                    <button class="login-button" id="loginButton" type="submit">
+                        <span>LOGIN TO DASHBOARD</span>
+                        <span aria-hidden="true">→</span>
+                    </button>
+
+                    <p class="form-status" id="formStatus"
+                       role="status" aria-live="polite"></p>
+                </form>
+
+                <div class="create-account">
+    <p>Don't have an account?</p>
+    <a href="signup.html" class="create-account-link">
+        Create Account <span>→</span>
+    </a>
+</div>
+
+                <div class="login-footer">
+                    By continuing, you agree to follow your organization's
+                    access and security policies.
+                </div>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("loginForm");
+    const role = document.getElementById("loginRole");
+    const email = document.getElementById("loginEmail");
+    const password = document.getElementById("loginPassword");
+    const togglePassword = document.getElementById("togglePassword");
+    const loginButton = document.getElementById("loginButton");
+    const status = document.getElementById("formStatus");
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const strongPasswordPattern =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S{8,128}$/;
+
+    function showError(input, errorId, message) {
+        const error = document.getElementById(errorId);
+        error.textContent = message;
+        input.classList.toggle("invalid", Boolean(message));
+        input.classList.toggle("valid", !message && input.value.trim() !== "");
+        input.setAttribute("aria-invalid", String(Boolean(message)));
+        return !message;
+    }
+
+    function validateRole() {
+        return showError(
+            role,
+            "roleError",
+            role.value ? "" : "Please select your login role."
+        );
+    }
+
+    function validateEmail() {
+        const value = email.value.trim();
+        let message = "";
+
+        if (!value) {
+            message = "Email address is required.";
+        } else if (value.length > 254 || !emailPattern.test(value)) {
+            message = "Please enter a valid email address.";
+        }
+
+        return showError(email, "emailError", message);
+    }
+
+    function validatePassword() {
+        const value = password.value;
+        let message = "";
+
+        if (!value) {
+            message = "Password is required.";
+        } else if (!strongPasswordPattern.test(value)) {
+            message =
+                "Use 8+ characters with uppercase, lowercase, a number, and a special character.";
+        }
+
+        return showError(password, "passwordError", message);
+    }
+
+    role.addEventListener("change", function () {
+        validateRole();
+        clearStatus();
+    });
+
+    email.addEventListener("input", function () {
+        validateEmail();
+        clearStatus();
+    });
+
+    password.addEventListener("input", function () {
+        validatePassword();
+        clearStatus();
+    });
+
+    function clearStatus() {
+        status.textContent = "";
+        status.className = "form-status";
+    }
+
+    togglePassword.addEventListener("click", function () {
+        const show = password.type === "password";
+        password.type = show ? "text" : "password";
+        togglePassword.textContent = show ? "HIDE" : "SHOW";
+        togglePassword.setAttribute(
+            "aria-label",
+            show ? "Hide password" : "Show password"
+        );
+    });
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const isRoleValid = validateRole();
+        const isEmailValid = validateEmail();
+        const isPasswordValid = validatePassword();
+
+        if (!isRoleValid || !isEmailValid || !isPasswordValid) {
+            status.textContent = "Please correct the highlighted fields.";
+            status.className = "form-status error";
+
+            const firstInvalid = form.querySelector(".invalid");
+            if (firstInvalid) firstInvalid.focus();
+
+            return;
+        }
+
+        /*
+         * DEMO ROLE-BASED REDIRECTION ONLY.
+         * This does not authenticate the email/password.
+         * Connect a secure backend before using in production.
+         */
+        // Save the email entered at login so the dashboard can display it.
+        const loginEmailValue = email.value.trim().toLowerCase();
+        const selectedRole = role.value;
+
+        try {
+            sessionStorage.setItem("loginEmail", loginEmailValue);
+            sessionStorage.setItem("loginRole", selectedRole);
+
+            if (document.getElementById("rememberMe").checked) {
+                localStorage.setItem("loginEmail", loginEmailValue);
+                localStorage.setItem("loginRole", selectedRole);
+            } else {
+                localStorage.removeItem("loginEmail");
+                localStorage.removeItem("loginRole");
+            }
+        } catch (storageError) {
+            console.warn("Unable to save login details in browser storage.", storageError);
+        }
+
+        const dashboard = selectedRole === "admin"
+            ? "admin-dashboard.html"
+            : "user-dashboard.html";
+
+        loginButton.disabled = true;
+        loginButton.querySelector("span").textContent = "PLEASE WAIT...";
+
+        status.textContent = "Details validated. Opening your dashboard...";
+        status.className = "form-status success";
+
+        window.setTimeout(function () {
+            window.location.href = dashboard;
+        }, 700);
+    });
+});
+</script>
+
+</body>
+</html>

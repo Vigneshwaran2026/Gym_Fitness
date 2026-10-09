@@ -1,0 +1,1667 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitness Admin Dashboard</title>
+
+<style>
+
+    html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+:root {
+    --Neon: #DEFB02;
+    --Black: #000000;
+    --Gray: #F6F6F6;
+    --White: #FFFFFF;
+    --Red: #F30A46;
+    --Title: #111111;
+    --Paragraph: #646464;
+    --Border: #EAEAEA;
+    --Green: #16834A;
+    --SidebarWidth: 255px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--Gray);
+    color: var(--Title);
+    min-height: 100vh;
+}
+
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+a { text-decoration: none; color: inherit; }
+
+.app { min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: var(--SidebarWidth);
+    background: var(--Black);
+    color: var(--White);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    overflow-y: auto;
+    transition: transform .3s ease;
+}
+
+
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 58px;
+    margin: 0 0 30px;
+}
+
+.brand-logo {
+    display: block;
+    width: 150px;
+    height: 55px;
+    object-fit: contain;
+}
+
+/* Mobile sizing */
+@media (max-width: 480px) {
+    .brand-logo {
+        width: 125px;
+        height: 45px;
+    }
+}
+
+
+.brand-fallback {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-size: 21px;
+    font-weight: 900;
+}
+
+.brand-mark {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: var(--Neon);
+    color: var(--Black);
+}
+
+.profile-mini {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 10px;
+    margin-bottom: 22px;
+    background: #171717;
+    border: 1px solid #303030;
+    border-radius: 13px;
+}
+
+.avatar {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--Black);
+    background: var(--Neon);
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.profile-mini strong {
+    display: block;
+    font-size: 13px;
+    color: var(--White);
+    overflow-wrap: anywhere;
+}
+
+.profile-mini .admin-role, .top-user .admin-role {
+    display: block;
+    color: var(--Neon);
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.profile-mini small {
+    display: block;
+    color: #a6a6a6;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.nav-label {
+    padding: 0 12px;
+    margin: 8px 0 12px;
+    color: #898989;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.sidebar-nav {
+    display: grid;
+    gap: 5px;
+}
+
+.nav-link {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 13px;
+    border: 0;
+    border-radius: 9px;
+    color: #bcbcbc;
+    background: transparent;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 650;
+    transition: .2s ease;
+}
+
+.nav-link .nav-icon {
+    width: 23px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.nav-link:hover {
+    color: var(--White);
+    background: #1e1e1e;
+}
+
+.nav-link.active {
+    color: var(--Black);
+    background: var(--Neon);
+    box-shadow: 0 4px 15px rgba(222,251,2,.12);
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding-top: 24px;
+}
+
+.sidebar-bottom p {
+    font-size: 11px;
+    line-height: 1.7;
+    color: #777;
+    padding: 12px;
+}
+
+/* Main area */
+.main {
+    margin-left: var(--SidebarWidth);
+    min-height: 100vh;
+    min-width: 0;
+}
+
+.topbar {
+    height: 82px;
+    padding: 0 30px;
+    background: var(--White);
+    border-bottom: 1px solid var(--Border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.topbar-left, .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 0;
+}
+
+.page-heading h1 {
+    font-size: 21px;
+    font-weight: 900;
+    letter-spacing: -.5px;
+}
+
+.page-heading p {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--Paragraph);
+}
+
+.menu-toggle {
+    display: none;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--Border);
+    border-radius: 9px;
+    background: var(--White);
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 260px;
+    padding: 0 13px;
+    height: 42px;
+    border: 1px solid var(--Border);
+    border-radius: 9px;
+    background: #fafafa;
+}
+
+.search-box span { color: var(--Paragraph); }
+
+.search-box input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-size: 12px;
+    color: var(--Title);
+}
+
+.top-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.top-user .avatar {
+    width: 39px;
+    height: 39px;
+}
+
+.top-user strong {
+    display: block;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.top-user small {
+    display: block;
+    color: var(--Paragraph);
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+.logout-btn {
+    padding: 10px 13px;
+    background: var(--White);
+    border: 1px solid var(--Border);
+    border-radius: 9px;
+    color: var(--Red);
+    font-size: 12px;
+    font-weight: 800;
+    transition: .2s;
+}
+
+.logout-btn:hover {
+    background: var(--Red);
+    border-color: var(--Red);
+    color: var(--White);
+}
+
+/* Content */
+.content {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 28px 30px 45px;
+    animation: pageEnter .3s ease;
+}
+
+@keyframes pageEnter {
+    from { opacity: 0; transform: translateY(7px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    padding: 29px 30px;
+    margin-bottom: 25px;
+    border-radius: 16px;
+    background: var(--Black);
+    color: var(--White);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-banner::after {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    right: 10%;
+    top: -105px;
+    border-radius: 50%;
+    background: var(--Neon);
+    opacity: .15;
+}
+
+.welcome-banner h2 {
+    position: relative;
+    z-index: 1;
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 900;
+    margin-bottom: 9px;
+}
+
+.welcome-banner p {
+    position: relative;
+    z-index: 1;
+    color: #c2c2c2;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.banner-tag {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    padding: 11px 15px;
+    border-radius: 9px;
+    background: var(--Neon);
+    color: var(--Black);
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin: 28px 0 17px;
+}
+
+.section-heading h2 {
+    font-size: 17px;
+    font-weight: 900;
+}
+
+.section-heading p {
+    color: var(--Paragraph);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.stat-card {
+    padding: 20px;
+    border-radius: 13px;
+    border: 1px solid var(--Border);
+    background: var(--White);
+    transition: transform .25s, box-shadow .25s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,.05);
+}
+
+.stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 17px;
+}
+
+.stat-icon {
+    display: grid;
+    place-items: center;
+    width: 41px;
+    height: 41px;
+    background: var(--Gray);
+    border-radius: 11px;
+    font-size: 19px;
+}
+
+.stat-change {
+    color: var(--Green);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.stat-card h3 {
+    font-size: 26px;
+    letter-spacing: -1px;
+    font-weight: 900;
+}
+
+.stat-card p {
+    color: var(--Paragraph);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 18px;
+    margin-top: 22px;
+}
+
+.panel {
+    background: var(--White);
+    border: 1px solid var(--Border);
+    border-radius: 13px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.panel-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.panel-heading h3 {
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.panel-heading p {
+    margin-top: 5px;
+    font-size: 11px;
+    color: var(--Paragraph);
+}
+
+.chart-legend {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 15px;
+    font-size: 11px;
+    color: var(--Paragraph);
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--Neon);
+    margin-right: 5px;
+}
+
+.legend-dot.black { background: var(--Black); }
+
+.bar-chart {
+    height: 205px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    gap: 12px;
+    padding-top: 10px;
+    border-bottom: 1px solid var(--Border);
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 48px,
+        #ededed 49px,
+        transparent 50px
+    );
+}
+
+.bar-group {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+}
+
+.bar {
+    width: min(25px, 40%);
+    min-height: 6px;
+    border-radius: 5px 5px 0 0;
+    background: var(--Neon);
+    animation: barGrow .7s ease both;
+    transform-origin: bottom;
+}
+
+.bar.secondary { background: var(--Black); }
+
+@keyframes barGrow {
+    from { transform: scaleY(.15); }
+    to { transform: scaleY(1); }
+}
+
+.chart-labels {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 10px;
+    color: var(--Paragraph);
+}
+
+.activity-list { display: grid; gap: 18px; }
+
+.activity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.activity-icon {
+    width: 39px;
+    height: 39px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--Gray);
+    font-size: 17px;
+}
+
+.activity-info { min-width: 0; flex: 1; }
+
+.activity-info strong {
+    display: block;
+    font-size: 12px;
+}
+
+.activity-info p {
+    color: var(--Paragraph);
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.activity-time {
+    color: var(--Paragraph);
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.table-panel {
+    margin-top: 22px;
+    padding: 22px;
+    background: var(--White);
+    border: 1px solid var(--Border);
+    border-radius: 13px;
+    overflow: hidden;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 570px;
+}
+
+th {
+    padding: 13px 12px;
+    background: #fafafa;
+    color: var(--Paragraph);
+    font-size: 10px;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+}
+
+td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+tbody tr:last-child td { border-bottom: 0; }
+
+.member-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+}
+
+.mini-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--Neon);
+    color: var(--Black);
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 9px;
+    border-radius: 30px;
+    background: #f1f1f1;
+    color: #555;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.status.active, .status.paid, .status.completed {
+    color: #176b3b;
+    background: #e8f7ed;
+}
+
+.status.pending {
+    color: #8b5d00;
+    background: #fff4d9;
+}
+
+.status.cancelled, .status.inactive {
+    color: #a01d32;
+    background: #ffebef;
+}
+
+/* Generic section cards */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.info-card {
+    padding: 22px;
+    border-radius: 13px;
+    background: var(--White);
+    border: 1px solid var(--Border);
+    transition: transform .2s, box-shadow .2s;
+}
+
+.info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0,0,0,.05);
+}
+
+.info-card .card-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    background: var(--Neon);
+    border-radius: 12px;
+    font-size: 20px;
+    margin-bottom: 17px;
+}
+
+.info-card h3 {
+    font-size: 15px;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+.info-card p {
+    color: var(--Paragraph);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.info-card .card-value {
+    font-size: 25px;
+    font-weight: 900;
+    margin: 12px 0 6px;
+}
+
+.info-card .card-foot {
+    font-size: 11px;
+    color: var(--Paragraph);
+    margin-top: 12px;
+}
+
+.btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 13px;
+    border: 1px solid var(--Black);
+    border-radius: 8px;
+    background: var(--Neon);
+    color: var(--Black);
+    font-size: 11px;
+    font-weight: 900;
+    transition: .2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 var(--Black);
+}
+
+.btn-dark {
+    background: var(--Black);
+    color: var(--White);
+    border-color: var(--Black);
+}
+
+.btn-outline {
+    background: var(--White);
+    color: var(--Black);
+}
+
+.btn-danger {
+    background: var(--Red);
+    color: var(--White);
+    border-color: var(--Red);
+}
+
+.btn-small { padding: 7px 10px; }
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.toolbar p {
+    color: var(--Paragraph);
+    font-size: 12px;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+.progress-track {
+    height: 8px;
+    background: #eeeeee;
+    border-radius: 30px;
+    overflow: hidden;
+    margin-top: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: var(--progress, 60%);
+    background: var(--Neon);
+    border-radius: 30px;
+}
+
+.empty-search {
+    display: none;
+    text-align: center;
+    padding: 35px 15px;
+    color: var(--Paragraph);
+    font-size: 13px;
+}
+
+.search-hidden { display: none !important; }
+
+/* Settings */
+.settings-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.settings-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.settings-field input,
+.settings-field select {
+    width: 100%;
+    height: 44px;
+    padding: 10px 12px;
+    border: 1px solid var(--Border);
+    border-radius: 8px;
+    outline: none;
+    background: var(--White);
+}
+
+.settings-field input:focus,
+.settings-field select:focus {
+    border-color: var(--Black);
+    box-shadow: 0 0 0 3px rgba(222,251,2,.5);
+}
+
+.settings-note {
+    color: var(--Paragraph);
+    font-size: 12px;
+    line-height: 1.7;
+    margin-top: 18px;
+}
+
+/* Responsive */
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 90;
+}
+
+@media (max-width: 1200px) {
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .overlay.show { display: block; }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .topbar { padding: 0 20px; }
+    .content { padding: 22px 20px 35px; }
+    .search-box { width: 220px; }
+}
+
+@media (max-width: 620px) {
+    .topbar {
+        min-height: 75px;
+        height: auto;
+        padding: 13px 15px;
+        flex-wrap: wrap;
+    }
+
+    .topbar-left { flex: 1; }
+    .page-heading h1 { font-size: 17px; }
+    .page-heading p { display: none; }
+    .topbar-right { width: 100%; justify-content: space-between; }
+    .search-box { flex: 1; width: auto; }
+    .top-user .user-details { display: none; }
+    .logout-btn { padding: 9px 10px; }
+    .content { padding: 18px 14px 30px; }
+    .welcome-banner { padding: 22px; align-items: flex-start; }
+    .banner-tag { display: none; }
+    .stats-grid, .cards-grid { grid-template-columns: 1fr 1fr; gap: 11px; }
+    .stat-card, .info-card { padding: 15px; }
+    .stat-card h3 { font-size: 22px; }
+    .stat-card p { line-height: 1.5; }
+    .panel, .table-panel { padding: 16px; }
+    .settings-form { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 390px) {
+    .stats-grid, .cards-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+
+/* Sidebar scrollbar */
+.sidebar {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--Neon) var(--Black);
+}
+
+/* Chrome, Edge, and Safari */
+.sidebar::-webkit-scrollbar {
+    width: 7px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: var(--Black);
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--Neon);
+    border-radius: 10px;
+    border: 1px solid var(--Black);
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--Gray);
+}
+
+/* Smooth scrolling */
+.sidebar {
+    scroll-behavior: smooth;
+}
+
+
+</style>
+</head>
+
+<body>
+<div class="app">
+
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+       
+<a href="index.html" class="brand" aria-label="Back to home">
+    <img
+        src="image/logo/logo.webp"
+        alt="Logo"
+        class="brand-logo"
+        id="sidebarLogo"
+    >
+</a>
+
+
+        <div class="profile-mini">
+            <div class="avatar user-initials">A</div>
+            <div>
+                <strong class="username-display">Fitness Admin</strong>
+                <small class="email-display">Email not available</small>
+            </div>
+        </div>
+
+        <div class="nav-label">Main Menu</div>
+
+        <nav class="sidebar-nav" id="sidebarNav">
+            <button class="nav-link active" data-page="dashboard">
+                <span class="nav-icon">▦</span> Dashboard
+            </button>
+            <button class="nav-link" data-page="members">
+                <span class="nav-icon">♙</span> Members
+            </button>
+            <button class="nav-link" data-page="trainers">
+                <span class="nav-icon">🏋</span> Trainers
+            </button>
+            <button class="nav-link" data-page="classes">
+                <span class="nav-icon">▤</span> Fitness Classes
+            </button>
+            <button class="nav-link" data-page="schedule">
+                <span class="nav-icon">▦</span> Schedule
+            </button>
+            <button class="nav-link" data-page="nutrition">
+                <span class="nav-icon">♧</span> Nutrition Plans
+            </button>
+            <button class="nav-link" data-page="payments">
+                <span class="nav-icon">＄</span> Payments
+            </button>
+            <button class="nav-link" data-page="reports">
+                <span class="nav-icon">▥</span> Reports
+            </button>
+
+            <div class="nav-label" style="margin-top:20px;">System</div>
+
+            <button class="nav-link" data-page="settings">
+                <span class="nav-icon">⚙</span> Settings
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <button class="nav-link" id="sidebarLogout">
+                <span class="nav-icon">↪</span> Logout
+            </button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menuToggle"
+                    aria-label="Open navigation">☰</button>
+                <div class="page-heading">
+                    <h1 id="pageTitle">Dashboard Overview</h1>
+                    <p id="pageSubtitle">Monitor your fitness center performance</p>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <label class="search-box">
+                    <span>⌕</span>
+                    <input id="globalSearch" type="search"
+                        placeholder="Search this page..." autocomplete="off">
+                </label>
+
+                <div class="top-user">
+                    <div class="avatar user-initials">A</div>
+                    <div class="user-details">
+                        <strong class="username-display">Fitness Admin</strong>
+                        <small class="email-display">Email not available</small>
+                    </div>
+                </div>
+
+                <button class="logout-btn" id="topLogout">↪ Logout</button>
+            </div>
+        </header>
+
+        <div class="content" id="pageContent"></div>
+    </main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const pageContent = document.getElementById("pageContent");
+    const pageTitle = document.getElementById("pageTitle");
+    const pageSubtitle = document.getElementById("pageSubtitle");
+    const search = document.getElementById("globalSearch");
+
+    // Read the username saved by the login page.
+    const savedName =
+        sessionStorage.getItem("loginUsername") ||
+        localStorage.getItem("loginUsername") ||
+        sessionStorage.getItem("username") ||
+        localStorage.getItem("username") ||
+        "Admin";
+
+    const username = "Fitness Admin";
+    const savedEmail =
+        sessionStorage.getItem("loginEmail") ||
+        localStorage.getItem("loginEmail") ||
+        "";
+    document.querySelectorAll(".email-display").forEach(function (el) {
+        el.textContent = savedEmail || "Email not available";
+        el.title = savedEmail;
+    });
+
+    const initials = username.split(/\s+/)
+        .slice(0, 2)
+        .map(part => part.charAt(0).toUpperCase())
+        .join("");
+
+    document.querySelectorAll(".username-display").forEach(function (el) {
+        el.textContent = username;
+    });
+
+    document.querySelectorAll(".user-initials").forEach(function (el) {
+        el.textContent = initials || "A";
+    });
+
+    // If the logo path is wrong, show a simple fitness logo fallback.
+    document.getElementById("sidebarLogo").addEventListener("error", function () {
+        this.style.display = "none";
+        document.getElementById("logoFallback").style.display = "flex";
+    });
+
+    const pageMeta = {
+        dashboard: ["Dashboard Overview", "Monitor your fitness center performance"],
+        members: ["Members Management", "Manage member records and memberships"],
+        trainers: ["Trainer Management", "Review your coaching team"],
+        classes: ["Fitness Classes", "Manage group classes and capacity"],
+        schedule: ["Training Schedule", "Review upcoming sessions"],
+        nutrition: ["Nutrition Plans", "Explore sample nutrition programs"],
+        payments: ["Payments & Billing", "Review sample membership payments"],
+        reports: ["Fitness Reports", "Review performance indicators"],
+        settings: ["Dashboard Settings", "Manage demo dashboard preferences"]
+    };
+
+    function actionButton(label, extraClass = "") {
+        return `<button type="button" class="btn ${extraClass} go-404">${label}</button>`;
+    }
+
+    function statCard(icon, label, value, change, note) {
+        return `
+            <article class="stat-card searchable">
+                <div class="stat-top">
+                    <span class="stat-icon">${icon}</span>
+                    <span class="stat-change">${change}</span>
+                </div>
+                <h3>${value}</h3>
+                <p>${label}</p>
+                <p style="margin-top:9px;font-size:10px;">${note}</p>
+            </article>`;
+    }
+
+    function sectionHeading(title, description, buttonLabel = "＋ Add New") {
+        return `
+            <div class="section-heading">
+                <div>
+                    <h2>${title}</h2>
+                    <p>${description}</p>
+                </div>
+                ${actionButton(buttonLabel)}
+            </div>`;
+    }
+
+    function tablePanel(title, description, headers, rows, buttonLabel = "View All") {
+        return `
+            <section class="table-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>${title}</h3>
+                        <p>${description}</p>
+                    </div>
+                    ${actionButton(buttonLabel, "btn-outline")}
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr></thead>
+                        <tbody>${rows.join("")}</tbody>
+                    </table>
+                </div>
+                <div class="empty-search">No matching results found.</div>
+            </section>`;
+    }
+
+    function memberRow(name, id, plan, joined, status) {
+        const initials = name.split(" ").map(p => p[0]).slice(0, 2).join("");
+        return `
+            <tr class="searchable">
+                <td><div class="member-cell"><span class="mini-avatar">${initials}</span>${name}</div></td>
+                <td>${id}</td>
+                <td>${plan}</td>
+                <td>${joined}</td>
+                <td><span class="status ${status.toLowerCase()}">${status}</span></td>
+                <td>${actionButton("View", "btn-outline btn-small")}</td>
+            </tr>`;
+    }
+
+    const templates = {
+        dashboard: function () {
+            const rows = [
+                memberRow("Olivia Martin", "MB-1001", "Premium", "Oct 02, 2026", "Active"),
+                memberRow("Ethan Wilson", "MB-1002", "Standard", "Oct 03, 2026", "Active"),
+                memberRow("Sophia Brown", "MB-1003", "Monthly", "Oct 04, 2026", "Pending"),
+                memberRow("Noah Davis", "MB-1004", "Premium", "Oct 05, 2026", "Active")
+            ];
+
+            return `
+                <section class="welcome-banner searchable">
+                    <div>
+                        <h2>Welcome back, ${escapeHTML(username)}! 💪</h2>
+                        <p>Here is your fitness center overview. Keep your members<br>
+                        motivated and your team moving forward.</p>
+                    </div>
+                    <div class="banner-tag">FITNESS ADMIN</div>
+                </section>
+
+                <div class="stats-grid">
+                    ${statCard("♙", "Total Members", "1,284", "+12.8%", "Compared with last month")}
+                    ${statCard("🏋", "Active Trainers", "24", "+3", "Across all programs")}
+                    ${statCard("▤", "Classes This Week", "68", "+8.4%", "Scheduled group sessions")}
+                    ${statCard("＄", "Monthly Revenue", "₹8.4L", "+15.2%", "Demo revenue figure")}
+                </div>
+
+                <div class="dashboard-grid">
+                    <section class="panel searchable">
+                        <div class="panel-heading">
+                            <div><h3>Membership Activity</h3><p>Illustrative six-month comparison</p></div>
+                            ${actionButton("View Report", "btn-outline")}
+                        </div>
+                        <div class="chart-legend">
+                            <span><i class="legend-dot"></i>New members</span>
+                            <span><i class="legend-dot black"></i>Renewals</span>
+                        </div>
+                        <div class="bar-chart">
+                            ${[
+                                [42, 26], [65, 39], [50, 34],
+                                [78, 48], [61, 43], [92, 59]
+                            ].map((b, i) => `
+                                <div class="bar-group">
+                                    <div class="bar" style="height:${b[0]}%"></div>
+                                    <div class="bar secondary" style="height:${b[1]}%"></div>
+                                </div>`).join("")}
+                        </div>
+                        <div class="chart-labels">
+                            <span>May</span><span>Jun</span><span>Jul</span>
+                            <span>Aug</span><span>Sep</span><span>Oct</span>
+                        </div>
+                    </section>
+
+                    <section class="panel searchable">
+                        <div class="panel-heading">
+                            <div><h3>Recent Activity</h3><p>Sample dashboard notifications</p></div>
+                            ${actionButton("See All", "btn-outline")}
+                        </div>
+                        <div class="activity-list">
+                            <div class="activity">
+                                <span class="activity-icon">♙</span>
+                                <div class="activity-info"><strong>New member registered</strong><p>Olivia Martin joined Premium</p></div>
+                                <span class="activity-time">10 min</span>
+                            </div>
+                            <div class="activity">
+                                <span class="activity-icon">🏋</span>
+                                <div class="activity-info"><strong>Trainer schedule updated</strong><p>Strength Training · Studio A</p></div>
+                                <span class="activity-time">35 min</span>
+                            </div>
+                            <div class="activity">
+                                <span class="activity-icon">＄</span>
+                                <div class="activity-info"><strong>Payment recorded</strong><p>Sample payment · ₹2,499</p></div>
+                                <span class="activity-time">1 hr</span>
+                            </div>
+                            <div class="activity">
+                                <span class="activity-icon">▤</span>
+                                <div class="activity-info"><strong>Class almost full</strong><p>Morning HIIT · 18 of 20 spots</p></div>
+                                <span class="activity-time">2 hr</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                ${tablePanel("Recent Members", "Sample member records", 
+                    ["Member", "Member ID", "Plan", "Joined", "Status", "Action"],
+                    rows, "View Members")}`;
+        },
+
+        members: function () {
+            const rows = [
+                memberRow("Olivia Martin", "MB-1001", "Premium", "Oct 02, 2026", "Active"),
+                memberRow("Ethan Wilson", "MB-1002", "Standard", "Oct 03, 2026", "Active"),
+                memberRow("Sophia Brown", "MB-1003", "Monthly", "Oct 04, 2026", "Pending"),
+                memberRow("Noah Davis", "MB-1004", "Premium", "Oct 05, 2026", "Active"),
+                memberRow("Ava Johnson", "MB-1005", "Standard", "Oct 06, 2026", "Inactive")
+            ];
+
+            return `
+                <div class="stats-grid">
+                    ${statCard("♙", "All Members", "1,284", "+12.8%", "Illustrative data")}
+                    ${statCard("✓", "Active Members", "1,126", "87.7%", "Sample membership status")}
+                    ${statCard("◷", "Renewals Due", "48", "This month", "Check upcoming renewals")}
+                    ${statCard("＋", "New Signups", "76", "+9.2%", "Illustrative monthly signups")}
+                </div>
+                ${sectionHeading("Member Directory", "Search and review sample member records.", "＋ Add Member")}
+                ${tablePanel("All Members", "Demo data for UI presentation",
+                    ["Member", "Member ID", "Plan", "Joined", "Status", "Action"],
+                    rows, "Export Members")}`;
+        },
+
+        trainers: function () {
+            const trainers = [
+                ["🏋", "Marcus Reed", "Strength Coach", "12", "4.9"],
+                ["🧘", "Isabella Clark", "Yoga Instructor", "8", "4.8"],
+                ["🏃", "Daniel Lewis", "Cardio Coach", "10", "4.7"],
+                ["🥊", "Mia Walker", "Boxing Coach", "6", "4.9"],
+                ["💪", "James Hall", "Personal Trainer", "15", "4.8"],
+                ["🧘", "Amelia Young", "Pilates Instructor", "9", "4.9"]
+            ];
+
+            return `
+                <div class="stats-grid">
+                    ${statCard("🏋", "Total Trainers", "24", "+3", "Demo team size")}
+                    ${statCard("▤", "Sessions Today", "36", "Scheduled", "Sample schedule")}
+                    ${statCard("★", "Average Rating", "4.8/5", "Excellent", "Illustrative ratings")}
+                    ${statCard("◷", "Available Today", "18", "75%", "Sample availability")}
+                </div>
+                ${sectionHeading("Meet Your Trainers", "Coach profiles and sample session details.", "＋ Add Trainer")}
+                <div class="cards-grid">
+                    ${trainers.map(t => `
+                        <article class="info-card searchable">
+                            <div class="card-icon">${t[0]}</div>
+                            <h3>${t[1]}</h3>
+                            <p>${t[2]}</p>
+                            <div class="card-value">${t[3]} <span style="font-size:12px;">sessions/week</span></div>
+                            <p>★ ${t[4]} trainer rating · Sample data</p>
+                            <div class="card-foot">${actionButton("View Profile", "btn-outline")}</div>
+                        </article>`).join("")}
+                </div>`;
+        },
+
+        classes: function () {
+            const classes = [
+                ["🔥", "HIIT Training", "Cardio", "06:30 AM", "18 / 20", "Marcus Reed"],
+                ["🧘", "Morning Yoga", "Mind & Body", "08:00 AM", "12 / 18", "Isabella Clark"],
+                ["💪", "Strength Basics", "Strength", "10:00 AM", "14 / 16", "James Hall"],
+                ["🥊", "Boxing Fitness", "Cardio", "05:30 PM", "10 / 15", "Mia Walker"],
+                ["🚴", "Indoor Cycling", "Endurance", "06:30 PM", "16 / 20", "Daniel Lewis"],
+                ["🧘", "Evening Pilates", "Mind & Body", "07:30 PM", "9 / 16", "Amelia Young"]
+            ];
+
+            return `
+                <div class="stats-grid">
+                    ${statCard("▤", "Available Classes", "18", "This week", "Sample class list")}
+                    ${statCard("♙", "Enrolled Today", "94", "+7%", "Illustrative enrollment")}
+                    ${statCard("◷", "Average Capacity", "78%", "Healthy", "Sample occupancy")}
+                    ${statCard("✓", "Completed", "42", "This week", "Illustrative sessions")}
+                </div>
+                ${sectionHeading("Class Catalogue", "Class types, times, coaches, and capacity.", "＋ Create Class")}
+                <div class="cards-grid">
+                    ${classes.map(c => `
+                        <article class="info-card searchable">
+                            <div class="card-icon">${c[0]}</div>
+                            <h3>${c[1]}</h3>
+                            <p>${c[2]} · ${c[3]}</p>
+                            <div class="card-value">${c[4]}</div>
+                            <p>Coach: ${c[5]}</p>
+                            <div class="progress-track"><div class="progress-fill" style="--progress:${parseInt(c[4]) / parseInt(c[4].split("/")[1]) * 100}%"></div></div>
+                            <div class="card-foot">${actionButton("Manage Class", "btn-outline")}</div>
+                        </article>`).join("")}
+                </div>`;
+        },
+
+        schedule: function () {
+            const rows = [
+                ["06:30 AM", "HIIT Training", "Marcus Reed", "Studio A", "18 / 20", "Active"],
+                ["08:00 AM", "Morning Yoga", "Isabella Clark", "Studio B", "12 / 18", "Active"],
+                ["10:00 AM", "Strength Basics", "James Hall", "Gym Floor", "14 / 16", "Active"],
+                ["05:30 PM", "Boxing Fitness", "Mia Walker", "Studio C", "10 / 15", "Pending"],
+                ["06:30 PM", "Indoor Cycling", "Daniel Lewis", "Cycle Room", "16 / 20", "Active"]
+            ].map(r => `<tr class="searchable">
+                ${r.slice(0,5).map(v => `<td>${v}</td>`).join("")}
+                <td><span class="status ${r[5].toLowerCase()}">${r[5]}</span></td>
+                <td>${actionButton("Details", "btn-outline btn-small")}</td>
+            </tr>`);
+
+            return `
+                <div class="stats-grid">
+                    ${statCard("▤", "Sessions Today", "12", "Scheduled", "Sample timetable")}
+                    ${statCard("♙", "Members Booked", "94", "Across classes", "Illustrative bookings")}
+                    ${statCard("◷", "Next Session", "06:30 AM", "HIIT Training", "Sample schedule")}
+                    ${statCard("✓", "Rooms In Use", "4", "Of 5 rooms", "Illustrative availability")}
+                </div>
+                ${sectionHeading("Daily Timetable", "Review upcoming fitness sessions.", "＋ Add Session")}
+                ${tablePanel("Today's Schedule", "Sample sessions and room assignments",
+                    ["Time", "Class", "Trainer", "Location", "Bookings", "Status", "Action"],
+                    rows, "Full Calendar")}
+                <section class="panel" style="margin-top:22px;">
+                    <div class="panel-heading"><div><h3>Scheduling Notes</h3><p>Operational reminders</p></div></div>
+                    <div class="activity-list">
+                        <div class="activity"><span class="activity-icon">⏰</span><div class="activity-info"><strong>Prepare studios before sessions</strong><p>Check equipment and room readiness before each class.</p></div></div>
+                        <div class="activity"><span class="activity-icon">✓</span><div class="activity-info"><strong>Check booking capacity</strong><p>Review attendee counts and avoid overbooking.</p></div></div>
+                    </div>
+                </section>`;
+        },
+
+        nutrition: function () {
+            const plans = [
+                ["🥗", "Balanced Wellness", "Balanced meals for everyday fitness goals.", "1,900 kcal", "Beginner"],
+                ["🍗", "Lean Muscle Plan", "Protein-focused sample meal framework.", "2,400 kcal", "Intermediate"],
+                ["🥑", "Healthy Weight Plan", "Portion-aware sample meal framework.", "1,700 kcal", "Beginner"],
+                ["🍚", "Performance Fuel", "Energy-focused plan for active routines.", "2,700 kcal", "Advanced"],
+                ["🥦", "Plant-Based Fitness", "Plant-forward sample nutrition framework.", "2,100 kcal", "Intermediate"],
+                ["🍎", "Active Lifestyle", "Flexible everyday meal planning template.", "2,000 kcal", "Beginner"]
+            ];
+
+            return `
+                <div class="stats-grid">
+                    ${statCard("🥗", "Sample Plans", "12", "Available", "Demo nutrition plans")}
+                    ${statCard("♙", "Members Assigned", "186", "Illustrative", "Sample assignment count")}
+                    ${statCard("✓", "Plan Reviews", "32", "This week", "Sample review queue")}
+                    ${statCard("◷", "Upcoming Reviews", "14", "This month", "Demo schedule")}
+                </div>
+                ${sectionHeading("Nutrition Library", "Illustrative meal-planning templates, not medical advice.", "＋ Create Plan")}
+                <div class="cards-grid">
+                    ${plans.map(p => `
+                        <article class="info-card searchable">
+                            <div class="card-icon">${p[0]}</div>
+                            <h3>${p[1]}</h3>
+                            <p>${p[2]}</p>
+                            <div class="card-value">${p[3]}</div>
+                            <p>${p[4]} · Sample daily energy target</p>
+                            <div class="card-foot">${actionButton("View Plan", "btn-outline")}</div>
+                        </article>`).join("")}
+                </div>`;
+        },
+
+        payments: function () {
+            const rows = [
+                ["TX-8001", "Olivia Martin", "Premium Membership", "₹2,499", "Oct 06, 2026", "Paid"],
+                ["TX-8002", "Ethan Wilson", "Standard Membership", "₹1,499", "Oct 06, 2026", "Paid"],
+                ["TX-8003", "Sophia Brown", "Monthly Membership", "₹999", "Oct 07, 2026", "Pending"],
+                ["TX-8004", "Noah Davis", "Premium Membership", "₹2,499", "Oct 08, 2026", "Paid"],
+                ["TX-8005", "Ava Johnson", "Standard Membership", "₹1,499", "Oct 08, 2026", "Cancelled"]
+            ].map(r => `<tr class="searchable">
+                ${r.slice(0,5).map(v => `<td>${v}</td>`).join("")}
+                <td><span class="status ${r[5].toLowerCase()}">${r[5]}</span></td>
+                <td>${actionButton("Details", "btn-outline btn-small")}</td>
+            </tr>`);
+
+            return `
+                <div class="stats-grid">
+                    ${statCard("＄", "Revenue This Month", "₹8.4L", "+15.2%", "Demo figure")}
+                    ${statCard("✓", "Successful Payments", "1,126", "Illustrative", "Sample transaction count")}
+                    ${statCard("◷", "Pending Payments", "48", "Needs review", "Demo billing status")}
+                    ${statCard("↻", "Renewals Due", "76", "This month", "Illustrative renewals")}
+                </div>
+                ${sectionHeading("Billing Overview", "Sample membership transactions.", "＋ Record Payment")}
+                ${tablePanel("Recent Transactions", "Demo payment records only",
+                    ["Transaction", "Member", "Description", "Amount", "Date", "Status", "Action"],
+                    rows, "Export Transactions")}
+                <p class="settings-note">All amounts and transactions shown here are sample data. No real payment processing is connected.</p>`;
+        },
+
+        reports: function () {
+            return `
+                <div class="stats-grid">
+                    ${statCard("♙", "Member Growth", "+12.8%", "Monthly", "Sample KPI")}
+                    ${statCard("＄", "Revenue Growth", "+15.2%", "Monthly", "Sample KPI")}
+                    ${statCard("▤", "Class Attendance", "82%", "Average", "Sample KPI")}
+                    ${statCard("★", "Member Satisfaction", "4.8/5", "Illustrative", "Sample KPI")}
+                </div>
+                ${sectionHeading("Analytics & Reports", "Review illustrative fitness center performance indicators.", "＋ Generate Report")}
+                <div class="cards-grid">
+                    <article class="info-card searchable">
+                        <div class="card-icon">♙</div><h3>Membership Report</h3>
+                        <p>Explore sample membership totals, renewals, and signup trends.</p>
+                        <div class="card-value">1,284</div>
+                        <div class="card-foot">${actionButton("Open Report", "btn-outline")}</div>
+                    </article>
+                    <article class="info-card searchable">
+                        <div class="card-icon">＄</div><h3>Revenue Report</h3>
+                        <p>Review illustrative revenue and membership billing indicators.</p>
+                        <div class="card-value">₹8.4L</div>
+                        <div class="card-foot">${actionButton("Open Report", "btn-outline")}</div>
+                    </article>
+                    <article class="info-card searchable">
+                        <div class="card-icon">▤</div><h3>Class Performance</h3>
+                        <p>Review sample attendance, capacity, and class engagement.</p>
+                        <div class="card-value">82%</div>
+                        <div class="card-foot">${actionButton("Open Report", "btn-outline")}</div>
+                    </article>
+                    <article class="info-card searchable">
+                        <div class="card-icon">🏋</div><h3>Trainer Performance</h3>
+                        <p>Explore illustrative trainer ratings and session counts.</p>
+                        <div class="card-value">4.8 / 5</div>
+                        <div class="card-foot">${actionButton("Open Report", "btn-outline")}</div>
+                    </article>
+                    <article class="info-card searchable">
+                        <div class="card-icon">🥗</div><h3>Nutrition Engagement</h3>
+                        <p>Review sample plan assignments and review counts.</p>
+                        <div class="card-value">186</div>
+                        <div class="card-foot">${actionButton("Open Report", "btn-outline")}</div>
+                    </article>
+                    <article class="info-card searchable">
+                        <div class="card-icon">⬇</div><h3>Export Center</h3>
+                        <p>Access the report export workflow.</p>
+                        <div class="card-foot">${actionButton("Export Data", "btn-outline")}</div>
+                    </article>
+                </div>`;
+        },
+
+        settings: function () {
+            return `
+                <section class="panel">
+                    <div class="panel-heading">
+                        <div><h3>General Settings</h3><p>Sample interface preferences. Changes are not saved to a server.</p></div>
+                    </div>
+                    <form id="settingsForm">
+                        <div class="settings-form">
+                            <div class="settings-field">
+                                <label for="gymName">Fitness Center Name</label>
+                                <input id="gymName" value="Fitness Center">
+                            </div>
+                            <div class="settings-field">
+                                <label for="contactEmail">Contact Email</label>
+                                <input id="contactEmail" type="email" value="admin@example.com">
+                            </div>
+                            <div class="settings-field">
+                                <label for="timezone">Time Zone</label>
+                                <select id="timezone">
+                                    <option>Asia/Kolkata</option>
+                                    <option>UTC</option>
+                                    <option>Asia/Singapore</option>
+                                </select>
+                            </div>
+                            <div class="settings-field">
+                                <label for="currency">Currency</label>
+                                <select id="currency">
+                                    <option>INR - Indian Rupee</option>
+                                    <option>USD - US Dollar</option>
+                                    <option>EUR - Euro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <p class="settings-note">This settings form is for UI demonstration. Saving requires a backend or persistent configuration.</p>
+                        <div style="margin-top:20px;">${actionButton("Save Settings")}</div>
+                    </form>
+                </section>
+
+                <section class="panel" style="margin-top:20px;">
+                    <div class="panel-heading"><div><h3>Account</h3><p>Current dashboard session</p></div></div>
+                    <div class="activity">
+                        <span class="avatar user-initials">${escapeHTML(initials)}</span>
+                        <div class="activity-info">
+                            <strong>${escapeHTML(username)}</strong>
+                            <p>Fitness Admin · Signed in for this demo session</p>
+                        </div>
+                        <button class="btn btn-danger" id="settingsLogout" type="button">Logout</button>
+                    </div>
+                </section>`;
+        }
+    };
+
+    function escapeHTML(value) {
+        return String(value).replace(/[&<>"']/g, function (ch) {
+            return ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;",
+                '"': "&quot;", "'": "&#39;"
+            })[ch];
+        });
+    }
+
+    function renderPage(page) {
+        if (!templates[page]) page = "dashboard";
+
+        const meta = pageMeta[page];
+        pageTitle.textContent = meta[0];
+        pageSubtitle.textContent = meta[1];
+
+        document.querySelectorAll(".nav-link[data-page]").forEach(function (link) {
+            link.classList.toggle("active", link.dataset.page === page);
+        });
+
+        pageContent.innerHTML = templates[page]();
+        search.value = "";
+
+        sidebar.classList.remove("open");
+        overlay.classList.remove("show");
+
+        // Attach section-specific demo interactions.
+        const settingsLogout = document.getElementById("settingsLogout");
+        if (settingsLogout) settingsLogout.addEventListener("click", logout);
+
+        const settingsForm = document.getElementById("settingsForm");
+        if (settingsForm) {
+            settingsForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+            });
+        }
+    }
+
+    // Search filters visible records and cards on the active page.
+    function runSearch() {
+        const query = search.value.trim().toLowerCase();
+        const items = pageContent.querySelectorAll(".searchable");
+        let visible = 0;
+
+        items.forEach(function (item) {
+            const matches = item.textContent.toLowerCase().includes(query);
+            item.classList.toggle("search-hidden", !matches);
+            if (matches) visible++;
+        });
+
+        pageContent.querySelectorAll(".table-panel").forEach(function (panel) {
+            const rows = panel.querySelectorAll("tbody tr.searchable");
+            const empty = panel.querySelector(".empty-search");
+            if (empty && rows.length) {
+                const shownRows = Array.from(rows).filter(row =>
+                    !row.classList.contains("search-hidden")
+                ).length;
+                empty.style.display = shownRows === 0 ? "block" : "none";
+            }
+        });
+
+        let emptyMessage = pageContent.querySelector("#globalEmptySearch");
+        if (!emptyMessage) {
+            emptyMessage = document.createElement("div");
+            emptyMessage.id = "globalEmptySearch";
+            emptyMessage.className = "panel";
+            emptyMessage.style.cssText = "display:none;text-align:center;margin-top:20px;color:#646464;";
+            emptyMessage.textContent = "No matching content found on this page.";
+            pageContent.appendChild(emptyMessage);
+        }
+
+        emptyMessage.style.display = query && visible === 0 ? "block" : "none";
+    }
+
+    function logout() {
+        // Demo logout: clear the session username and return to login.
+        sessionStorage.removeItem("loginUsername");
+        sessionStorage.removeItem("username");
+        sessionStorage.removeItem("loginEmail");
+        sessionStorage.removeItem("loginRole");
+        window.location.href = "login.html";
+    }
+
+    document.getElementById("sidebarNav").addEventListener("click", function (event) {
+        const button = event.target.closest("[data-page]");
+        if (!button) return;
+        renderPage(button.dataset.page);
+    });
+
+    // All action buttons in the dashboard open the site's 404 page.
+    pageContent.addEventListener("click", function (event) {
+        const button = event.target.closest(".go-404");
+        if (!button) return;
+        window.location.href = "404.html";
+    });
+
+    search.addEventListener("input", runSearch);
+
+    document.getElementById("topLogout").addEventListener("click", logout);
+    document.getElementById("sidebarLogout").addEventListener("click", logout);
+
+    document.getElementById("menuToggle").addEventListener("click", function () {
+        sidebar.classList.toggle("open");
+        overlay.classList.toggle("show");
+    });
+
+    overlay.addEventListener("click", function () {
+        sidebar.classList.remove("open");
+        overlay.classList.remove("show");
+    });
+
+    renderPage("dashboard");
+});
+</script>
+
+</body>
+</html>

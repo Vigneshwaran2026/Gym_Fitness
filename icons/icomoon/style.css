@@ -1,0 +1,105 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?840nl7');
+  src:  url('fonts/icomoon.eot?840nl7#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?840nl7') format('truetype'),
+    url('fonts/icomoon.woff?840nl7') format('woff'),
+    url('fonts/icomoon.svg?840nl7#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-play:before {
+  content: "\e9d7";
+}
+.icon-chevron-down:before {
+  content: "\e934";
+}
+.icon-chevron-up:before {
+  content: "\e937";
+}
+.icon-fb:before {
+  content: "\e902";
+}
+.icon-gym-svgrepo-com-1:before {
+  content: "\e903";
+}
+.icon-star:before {
+  content: "\e906";
+}
+.icon-time:before {
+  content: "\e907";
+}
+.icon-x:before {
+  content: "\e908";
+}
+.icon-search:before {
+  content: "\e909";
+}
+.icon-basecamp:before {
+  content: "\e90b";
+}
+.icon-share-2:before {
+  content: "\e9ee";
+}
+.icon-chevron-left:before {
+  content: "\e935";
+}
+.icon-chevron-right:before {
+  content: "\e936";
+}
+.icon-arrow-up-right:before {
+  content: "\e917";
+}
+.icon-send:before {
+  content: "\e9ea";
+}
+.icon-facebook-f:before {
+  content: "\e926";
+}
+.icon-instagram:before {
+  content: "\e930";
+}
+.icon-linkedin-in:before {
+  content: "\e932";
+}
+.icon-twitter-x:before {
+  content: "\e954";
+}
+.icon-arrow-down:before {
+  content: "\e90c";
+}
+.icon-arrow-left:before {
+  content: "\e910";
+}
+.icon-arrow-up:before {
+  content: "\e914";
+}
+.icon-arrow-right:before {
+  content: "\e912";
+}
+.icon-check:before {
+  content: "\e931";
+}
+.icon-close:before {
+  content: "\e92b";
+}
+.icon-chevrons-right:before {
+  content: "\e93a";
+}

@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitness User Dashboard</title>
+<style>
+
+    html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+:root {
+    --Neon: #DEFB02;
+    --Black: #000000;
+    --Gray: #F6F6F6;
+    --White: #FFFFFF;
+    --Red: #F30A46;
+    --Title: #111111;
+    --Paragraph: #646464;
+    --Border: #EAEAEA;
+    --Green: #16834A;
+    --SidebarWidth: 255px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--Gray);
+    color: var(--Title);
+    min-height: 100vh;
+}
+
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+a { text-decoration: none; color: inherit; }
+
+.app { min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: var(--SidebarWidth);
+    background: var(--Black);
+    color: var(--White);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    overflow-y: auto;
+    transition: transform .3s ease;
+}
+
+
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 58px;
+    margin: 0 0 30px;
+}
+
+.brand-logo {
+    display: block;
+    width: 150px;
+    height: 55px;
+    object-fit: contain;
+}
+
+/* Mobile sizing */
+@media (max-width: 480px) {
+    .brand-logo {
+        width: 125px;
+        height: 45px;
+    }
+}
+
+
+.brand-fallback {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    font-size: 21px;
+    font-weight: 900;
+}
+
+.brand-mark {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: var(--Neon);
+    color: var(--Black);
+}
+
+.profile-mini {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 10px;
+    margin-bottom: 22px;
+    background: #171717;
+    border: 1px solid #303030;
+    border-radius: 13px;
+}
+
+.avatar {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--Black);
+    background: var(--Neon);
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.profile-mini strong {
+    display: block;
+    font-size: 13px;
+    color: var(--White);
+    overflow-wrap: anywhere;
+}
+
+.profile-mini small {
+    display: block;
+    color: #a6a6a6;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.nav-label {
+    padding: 0 12px;
+    margin: 8px 0 12px;
+    color: #898989;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.sidebar-nav {
+    display: grid;
+    gap: 5px;
+}
+
+.nav-link {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 13px;
+    border: 0;
+    border-radius: 9px;
+    color: #bcbcbc;
+    background: transparent;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 650;
+    transition: .2s ease;
+}
+
+.nav-link .nav-icon {
+    width: 23px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.nav-link:hover {
+    color: var(--White);
+    background: #1e1e1e;
+}
+
+.nav-link.active {
+    color: var(--Black);
+    background: var(--Neon);
+    box-shadow: 0 4px 15px rgba(222,251,2,.12);
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding-top: 24px;
+}
+
+.sidebar-bottom p {
+    font-size: 11px;
+    line-height: 1.7;
+    color: #777;
+    padding: 12px;
+}
+
+/* Main area */
+.main {
+    margin-left: var(--SidebarWidth);
+    min-height: 100vh;
+    min-width: 0;
+}
+
+.topbar {
+    height: 82px;
+    padding: 0 30px;
+    background: var(--White);
+    border-bottom: 1px solid var(--Border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.topbar-left, .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 0;
+}
+
+.page-heading h1 {
+    font-size: 21px;
+    font-weight: 900;
+    letter-spacing: -.5px;
+}
+
+.page-heading p {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--Paragraph);
+}
+
+.menu-toggle {
+    display: none;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--Border);
+    border-radius: 9px;
+    background: var(--White);
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 260px;
+    padding: 0 13px;
+    height: 42px;
+    border: 1px solid var(--Border);
+    border-radius: 9px;
+    background: #fafafa;
+}
+
+.search-box span { color: var(--Paragraph); }
+
+.search-box input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-size: 12px;
+    color: var(--Title);
+}
+
+.top-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.top-user .avatar {
+    width: 39px;
+    height: 39px;
+}
+
+.top-user strong {
+    display: block;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.top-user small {
+    display: block;
+    color: var(--Paragraph);
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+.logout-btn {
+    padding: 10px 13px;
+    background: var(--White);
+    border: 1px solid var(--Border);
+    border-radius: 9px;
+    color: var(--Red);
+    font-size: 12px;
+    font-weight: 800;
+    transition: .2s;
+}
+
+.logout-btn:hover {
+    background: var(--Red);
+    border-color: var(--Red);
+    color: var(--White);
+}
+
+/* Content */
+.content {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 28px 30px 45px;
+    animation: pageEnter .3s ease;
+}
+
+@keyframes pageEnter {
+    from { opacity: 0; transform: translateY(7px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    padding: 29px 30px;
+    margin-bottom: 25px;
+    border-radius: 16px;
+    background: var(--Black);
+    color: var(--White);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-banner::after {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    right: 10%;
+    top: -105px;
+    border-radius: 50%;
+    background: var(--Neon);
+    opacity: .15;
+}
+
+.welcome-banner h2 {
+    position: relative;
+    z-index: 1;
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 900;
+    margin-bottom: 9px;
+}
+
+.welcome-banner p {
+    position: relative;
+    z-index: 1;
+    color: #c2c2c2;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.banner-tag {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    padding: 11px 15px;
+    border-radius: 9px;
+    background: var(--Neon);
+    color: var(--Black);
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin: 28px 0 17px;
+}
+
+.section-heading h2 {
+    font-size: 17px;
+    font-weight: 900;
+}
+
+.section-heading p {
+    color: var(--Paragraph);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.stat-card {
+    padding: 20px;
+    border-radius: 13px;
+    border: 1px solid var(--Border);
+    background: var(--White);
+    transition: transform .25s, box-shadow .25s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,.05);
+}
+
+.stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 17px;
+}
+
+.stat-icon {
+    display: grid;
+    place-items: center;
+    width: 41px;
+    height: 41px;
+    background: var(--Gray);
+    border-radius: 11px;
+    font-size: 19px;
+}
+
+.stat-change {
+    color: var(--Green);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.stat-card h3 {
+    font-size: 26px;
+    letter-spacing: -1px;
+    font-weight: 900;
+}
+
+.stat-card p {
+    color: var(--Paragraph);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 18px;
+    margin-top: 22px;
+}
+
+.panel {
+    background: var(--White);
+    border: 1px solid var(--Border);
+    border-radius: 13px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.panel-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.panel-heading h3 {
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.panel-heading p {
+    margin-top: 5px;
+    font-size: 11px;
+    color: var(--Paragraph);
+}
+
+.chart-legend {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 15px;
+    font-size: 11px;
+    color: var(--Paragraph);
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--Neon);
+    margin-right: 5px;
+}
+
+.legend-dot.black { background: var(--Black); }
+
+.bar-chart {
+    height: 205px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    gap: 12px;
+    padding-top: 10px;
+    border-bottom: 1px solid var(--Border);
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 48px,
+        #ededed 49px,
+        transparent 50px
+    );
+}
+
+.bar-group {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+}
+
+.bar {
+    width: min(25px, 40%);
+    min-height: 6px;
+    border-radius: 5px 5px 0 0;
+    background: var(--Neon);
+    animation: barGrow .7s ease both;
+    transform-origin: bottom;
+}
+
+.bar.secondary { background: var(--Black); }
+
+@keyframes barGrow {
+    from { transform: scaleY(.15); }
+    to { transform: scaleY(1); }
+}
+
+.chart-labels {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 10px;
+    color: var(--Paragraph);
+}
+
+.activity-list { display: grid; gap: 18px; }
+
+.activity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.activity-icon {
+    width: 39px;
+    height: 39px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--Gray);
+    font-size: 17px;
+}
+
+.activity-info { min-width: 0; flex: 1; }
+
+.activity-info strong {
+    display: block;
+    font-size: 12px;
+}
+
+.activity-info p {
+    color: var(--Paragraph);
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.activity-time {
+    color: var(--Paragraph);
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.table-panel {
+    margin-top: 22px;
+    padding: 22px;
+    background: var(--White);
+    border: 1px solid var(--Border);
+    border-radius: 13px;
+    overflow: hidden;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 570px;
+}
+
+th {
+    padding: 13px 12px;
+    background: #fafafa;
+    color: var(--Paragraph);
+    font-size: 10px;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+}
+
+td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+tbody tr:last-child td { border-bottom: 0; }
+
+.member-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+}
+
+.mini-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--Neon);
+    color: var(--Black);
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 9px;
+    border-radius: 30px;
+    background: #f1f1f1;
+    color: #555;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.status.active, .status.paid, .status.completed {
+    color: #176b3b;
+    background: #e8f7ed;
+}
+
+.status.pending {
+    color: #8b5d00;
+    background: #fff4d9;
+}
+
+.status.cancelled, .status.inactive {
+    color: #a01d32;
+    background: #ffebef;
+}
+
+/* Generic section cards */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.info-card {
+    padding: 22px;
+    border-radius: 13px;
+    background: var(--White);
+    border: 1px solid var(--Border);
+    transition: transform .2s, box-shadow .2s;
+}
+
+.info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0,0,0,.05);
+}
+
+.info-card .card-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    background: var(--Neon);
+    border-radius: 12px;
+    font-size: 20px;
+    margin-bottom: 17px;
+}
+
+.info-card h3 {
+    font-size: 15px;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+.info-card p {
+    color: var(--Paragraph);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.info-card .card-value {
+    font-size: 25px;
+    font-weight: 900;
+    margin: 12px 0 6px;
+}
+
+.info-card .card-foot {
+    font-size: 11px;
+    color: var(--Paragraph);
+    margin-top: 12px;
+}
+
+.btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 13px;
+    border: 1px solid var(--Black);
+    border-radius: 8px;
+    background: var(--Neon);
+    color: var(--Black);
+    font-size: 11px;
+    font-weight: 900;
+    transition: .2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 var(--Black);
+}
+
+.btn-dark {
+    background: var(--Black);
+    color: var(--White);
+    border-color: var(--Black);
+}
+
+.btn-outline {
+    background: var(--White);
+    color: var(--Black);
+}
+
+.btn-danger {
+    background: var(--Red);
+    color: var(--White);
+    border-color: var(--Red);
+}
+
+.btn-small { padding: 7px 10px; }
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.toolbar p {
+    color: var(--Paragraph);
+    font-size: 12px;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+.progress-track {
+    height: 8px;
+    background: #eeeeee;
+    border-radius: 30px;
+    overflow: hidden;
+    margin-top: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: var(--progress, 60%);
+    background: var(--Neon);
+    border-radius: 30px;
+}
+
+.empty-search {
+    display: none;
+    text-align: center;
+    padding: 35px 15px;
+    color: var(--Paragraph);
+    font-size: 13px;
+}
+
+.search-hidden { display: none !important; }
+
+/* Settings */
+.settings-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.settings-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.settings-field input,
+.settings-field select {
+    width: 100%;
+    height: 44px;
+    padding: 10px 12px;
+    border: 1px solid var(--Border);
+    border-radius: 8px;
+    outline: none;
+    background: var(--White);
+}
+
+.settings-field input:focus,
+.settings-field select:focus {
+    border-color: var(--Black);
+    box-shadow: 0 0 0 3px rgba(222,251,2,.5);
+}
+
+.settings-note {
+    color: var(--Paragraph);
+    font-size: 12px;
+    line-height: 1.7;
+    margin-top: 18px;
+}
+
+/* Responsive */
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 90;
+}
+
+@media (max-width: 1200px) {
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .overlay.show { display: block; }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .topbar { padding: 0 20px; }
+    .content { padding: 22px 20px 35px; }
+    .search-box { width: 220px; }
+}
+
+@media (max-width: 620px) {
+    .topbar {
+        min-height: 75px;
+        height: auto;
+        padding: 13px 15px;
+        flex-wrap: wrap;
+    }
+
+    .topbar-left { flex: 1; }
+    .page-heading h1 { font-size: 17px; }
+    .page-heading p { display: none; }
+    .topbar-right { width: 100%; justify-content: space-between; }
+    .search-box { flex: 1; width: auto; }
+    .top-user .user-details { display: none; }
+    .logout-btn { padding: 9px 10px; }
+    .content { padding: 18px 14px 30px; }
+    .welcome-banner { padding: 22px; align-items: flex-start; }
+    .banner-tag { display: none; }
+    .stats-grid, .cards-grid { grid-template-columns: 1fr 1fr; gap: 11px; }
+    .stat-card, .info-card { padding: 15px; }
+    .stat-card h3 { font-size: 22px; }
+    .stat-card p { line-height: 1.5; }
+    .panel, .table-panel { padding: 16px; }
+    .settings-form { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 390px) {
+    .stats-grid, .cards-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+
+/* Sidebar scrollbar */
+.sidebar {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--Neon) var(--Black);
+}
+
+/* Chrome, Edge, and Safari */
+.sidebar::-webkit-scrollbar {
+    width: 7px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: var(--Black);
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--Neon);
+    border-radius: 10px;
+    border: 1px solid var(--Black);
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--Gray);
+}
+
+/* Smooth scrolling */
+.sidebar {
+    scroll-behavior: smooth;
+}
+
+
+
+
+/* User dashboard extensions, aligned with the admin dashboard style */
+.member-banner { display:flex;align-items:center;justify-content:space-between;gap:24px;padding:28px 30px;margin-bottom:25px;border-radius:16px;background:var(--Black);color:var(--White);position:relative;overflow:hidden; }
+.member-banner::after { content:"";position:absolute;width:190px;height:190px;right:10%;top:-105px;border-radius:50%;background:var(--Neon);opacity:.15; }
+.member-banner h2 { position:relative;z-index:1;font-size:clamp(22px,3vw,30px);font-weight:900;margin-bottom:9px; }
+.member-banner p { position:relative;z-index:1;color:#c2c2c2;font-size:13px;line-height:1.7; }
+.member-banner .banner-tag { flex-shrink:0;position:relative;z-index:1;padding:11px 15px;border-radius:9px;background:var(--Neon);color:var(--Black);font-size:12px;font-weight:900; }
+.member-grid { display:grid;grid-template-columns:1.35fr 1fr;gap:18px;margin-top:22px; }
+.member-chart { height:205px;display:flex;align-items:flex-end;justify-content:space-around;gap:12px;padding-top:10px;border-bottom:1px solid var(--Border);background:repeating-linear-gradient(to bottom,transparent 0,transparent 48px,#ededed 49px,transparent 50px); }
+.member-bar-group { height:100%;flex:1;display:flex;align-items:flex-end;justify-content:center;gap:5px; }
+.member-bar { width:min(25px,40%);min-height:6px;border-radius:5px 5px 0 0;background:var(--Neon); }
+.member-bar.dark { background:var(--Black); }
+.member-chart-labels { display:flex;justify-content:space-around;gap:10px;margin-top:10px;font-size:10px;color:var(--Paragraph); }
+.member-progress { height:8px;background:#eee;border-radius:30px;overflow:hidden;margin-top:12px; }
+.member-progress span { display:block;height:100%;width:var(--progress,60%);background:var(--Neon);border-radius:30px; }
+.member-date { display:grid;place-items:center;width:44px;height:48px;flex-shrink:0;border-radius:10px;background:var(--Neon);color:var(--Black);font-weight:900; }
+.member-date small { font-size:9px;text-transform:uppercase; }
+.member-row { display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid #f0f0f0; }
+.member-row:last-child { border-bottom:0; }
+.member-row-info { flex:1;min-width:0; }
+.member-row-info strong { display:block;font-size:12px; }
+.member-row-info p { color:var(--Paragraph);font-size:11px;margin-top:4px; }
+.member-row-time { color:var(--Paragraph);font-size:10px;white-space:nowrap; }
+.member-profile-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px; }
+.member-field label { display:block;margin-bottom:8px;font-size:12px;font-weight:800; }
+.member-field input,.member-field select { width:100%;height:44px;padding:10px 12px;border:1px solid var(--Border);border-radius:8px;outline:none;background:var(--White); }
+.member-field input:focus,.member-field select:focus { border-color:var(--Black);box-shadow:0 0 0 3px rgba(222,251,2,.5); }
+.member-nutrition-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px; }
+.member-nutrition { padding:17px;border-radius:12px;background:#fafafa;border:1px solid #eee; }
+.member-nutrition .card-icon { display:grid;place-items:center;width:40px;height:40px;background:var(--Neon);border-radius:11px;font-size:18px;margin-bottom:13px; }
+.member-nutrition strong { display:block;font-size:20px;margin-bottom:5px; }
+.member-nutrition p { color:var(--Paragraph);font-size:11px; }
+.member-note { color:var(--Paragraph);font-size:12px;line-height:1.7;margin-top:15px; }
+@media(max-width:1200px){.member-grid{grid-template-columns:1fr;}}
+@media(max-width:620px){.member-banner{padding:22px;align-items:flex-start}.member-banner .banner-tag{display:none}.member-profile-grid{grid-template-columns:1fr}.member-nutrition-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:390px){.member-nutrition-grid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="overlay" id="overlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="brand" aria-label="Back to home">
+      <img src="image/logo/logo.webp" alt="Stackly Fitness" class="brand-logo" id="sidebarLogo">
+    </a>
+    <div class="profile-mini">
+      <div class="avatar" id="sideInitials">U</div>
+      <div><strong id="sideName">Fitness Member</strong><small id="sideEmail" class="email-display">Email not available</small></div>
+    </div>
+    <div class="nav-label">Member Menu</div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <button class="nav-link active" data-page="dashboard"><span class="nav-icon">▦</span> Dashboard</button>
+      <button class="nav-link" data-page="profile"><span class="nav-icon">♙</span> My Profile</button>
+      <button class="nav-link" data-page="workouts"><span class="nav-icon">🏋</span> Workout Plans</button>
+      <button class="nav-link" data-page="classes"><span class="nav-icon">▤</span> Fitness Classes</button>
+      <button class="nav-link" data-page="schedule"><span class="nav-icon">▦</span> My Schedule</button>
+      <button class="nav-link" data-page="nutrition"><span class="nav-icon">♧</span> Nutrition Plans</button>
+      <button class="nav-link" data-page="progress"><span class="nav-icon">↗</span> My Progress</button>
+      <button class="nav-link" data-page="payments"><span class="nav-icon">＄</span> Payments</button>
+      <div class="nav-label" style="margin-top:20px;">Account</div>
+      <button class="nav-link" data-page="settings"><span class="nav-icon">⚙</span> Settings</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <button class="nav-link" id="sidebarLogout"><span class="nav-icon">↪</span> Logout</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+        <div class="page-heading"><h1 id="pageTitle">My Dashboard</h1><p id="pageSubtitle">Your fitness journey at a glance</p></div>
+      </div>
+      <div class="topbar-right">
+        <label class="search-box"><span>⌕</span><input id="globalSearch" type="search" placeholder="Search this page..." autocomplete="off"></label>
+        <div class="top-user"><div class="avatar" id="topInitials">U</div><div class="user-details"><strong id="topName">Fitness Member</strong><small id="topEmail" class="email-display">Email not available</small></div></div>
+        <button class="logout-btn" id="topLogout">↪ Logout</button>
+      </div>
+    </header>
+
+    <div class="content" id="pageContent"></div>
+  </main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  const pageContent = document.getElementById("pageContent");
+  const pageTitle = document.getElementById("pageTitle");
+  const pageSubtitle = document.getElementById("pageSubtitle");
+  const search = document.getElementById("globalSearch");
+  const savedName = sessionStorage.getItem("loginUsername") || localStorage.getItem("loginUsername") ||
+    sessionStorage.getItem("username") || localStorage.getItem("username") || "Fitness Member";
+  let username = savedName.trim() || "Fitness Member";
+  const savedEmail = sessionStorage.getItem("loginEmail") || localStorage.getItem("loginEmail") || "";
+  document.querySelectorAll(".email-display").forEach(el => {
+    el.textContent = savedEmail || "Email not available";
+    el.title = savedEmail;
+  });
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[ch]);
+  }
+  function initialsFor(value) {
+    return value.split(/\s+/).slice(0,2).map(part => part.charAt(0).toUpperCase()).join("") || "U";
+  }
+  function syncUser() {
+    document.getElementById("sideName").textContent = username;
+    document.getElementById("topName").textContent = username;
+    document.getElementById("sideInitials").textContent = initialsFor(username);
+    document.getElementById("topInitials").textContent = initialsFor(username);
+  }
+  syncUser();
+
+  const pageMeta = {
+    dashboard: ["My Dashboard", "Your fitness journey at a glance"],
+    profile: ["My Profile", "Manage your personal fitness account"],
+    workouts: ["Workout Plans", "Choose a plan that supports your goals"],
+    classes: ["Fitness Classes", "Explore and book available classes"],
+    schedule: ["My Schedule", "Review your upcoming fitness sessions"],
+    nutrition: ["Nutrition Plans", "Track your daily nutrition goals"],
+    progress: ["My Progress", "Review your activity and achievements"],
+    payments: ["Payments & Membership", "Review sample membership payments"],
+    settings: ["Account Settings", "Manage your dashboard preferences"]
+  };
+  function statCard(icon, label, value, change, note) {
+    return `<article class="stat-card searchable"><div class="stat-top"><span class="stat-icon">${icon}</span><span class="stat-change">${change}</span></div><h3>${value}</h3><p>${label}</p><p style="margin-top:9px;font-size:10px;">${note}</p></article>`;
+  }
+  function sectionHeading(title, description, buttonLabel = "") {
+    return `<div class="section-heading"><div><h2>${title}</h2><p>${description}</p></div>${buttonLabel ? `<button type="button" class="btn go-404">${buttonLabel}</button>` : ""}</div>`;
+  }
+  function tablePanel(title, description, headers, rows) {
+    return `<section class="table-panel searchable"><div class="panel-heading"><div><h3>${title}</h3><p>${description}</p></div></div><div class="table-wrap"><table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table></div><div class="empty-search">No matching results found.</div></section>`;
+  }
+  function workoutRow(name, date, duration, calories, status="Completed") {
+    return `<tr class="searchable"><td><div class="member-cell"><span class="mini-avatar">💪</span>${name}</div></td><td>${date}</td><td>${duration}</td><td>${calories}</td><td><span class="status ${status.toLowerCase()}">${status}</span></td></tr>`;
+  }
+  const templates = {
+    dashboard() {
+      const rows = [
+        workoutRow("Full Body Strength", "Oct 08, 2026", "55 min", "420 kcal"),
+        workoutRow("Cardio Intervals", "Oct 07, 2026", "35 min", "310 kcal"),
+        workoutRow("Core & Mobility", "Oct 05, 2026", "40 min", "260 kcal")
+      ];
+      return `
+        <section class="member-banner searchable"><div><h2>Welcome back, ${escapeHTML(username)}! 💪</h2><p>Keep showing up. Every workout counts.<br>Stay consistent and keep moving toward your goals.</p></div><div class="banner-tag">FITNESS MEMBER</div></section>
+        <div class="stats-grid">
+          ${statCard("🏋","Workouts Completed","24","+12%","This month")}
+          ${statCard("🔥","Calories Burned","8,450","+8.5%","Calories this month")}
+          ${statCard("◷","Training Time","18.5 hrs","On track","Active training time")}
+          ${statCard("★","Membership","Gold","Premium","Current sample plan")}
+        </div>
+        <div class="member-grid">
+          <section class="panel searchable"><div class="panel-heading"><div><h3>Weekly Activity</h3><p>Minutes spent training each day</p></div><span class="status active">Last 7 days</span></div><div class="chart-legend"><span><i class="legend-dot"></i>Workout minutes</span><span><i class="legend-dot black"></i>Goal</span></div><div class="member-chart">${[[55,40],[35,40],[75,60],[48,40],[85,60],[65,60],[30,40]].map((b,i)=>`<div class="member-bar-group"><div class="member-bar" style="height:${b[0]}%"></div><div class="member-bar dark" style="height:${b[1]}%"></div></div>`).join("")}</div><div class="member-chart-labels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div></section>
+          <section class="panel searchable"><div class="panel-heading"><div><h3>Monthly Goal</h3><p>Your current workout target</p></div><span class="status active">72%</span></div><h2 style="font-size:25px;margin:10px 0;">18 of 25 workouts</h2><p style="font-size:12px;color:var(--Paragraph);line-height:1.7;">You're making progress. Keep your routine consistent to reach your monthly target.</p><div class="member-progress"><span style="width:72%"></span></div><div class="activity-list" style="margin-top:22px;"><div class="activity"><span class="activity-icon">🎯</span><div class="activity-info"><strong>Next milestone</strong><p>Complete 7 more workouts</p></div></div><div class="activity"><span class="activity-icon">🔥</span><div class="activity-info"><strong>Keep your streak</strong><p>Schedule your next training session</p></div></div></div></section>
+        </div>
+        <div class="dashboard-grid"><section class="panel searchable"><div class="panel-heading"><div><h3>Upcoming Classes</h3><p>Your next scheduled sessions</p></div><button class="btn btn-outline" data-goto="classes">View Classes</button></div>
+          <div class="member-row"><div class="member-date"><strong>10</strong><small>OCT</small></div><div class="member-row-info"><strong>Strength Training</strong><p>Trainer: Alex Morgan · Studio A</p></div><span class="member-row-time">08:00 AM</span></div>
+          <div class="member-row"><div class="member-date"><strong>11</strong><small>OCT</small></div><div class="member-row-info"><strong>HIIT Workout</strong><p>Trainer: Sarah Lee · Studio B</p></div><span class="member-row-time">06:30 PM</span></div>
+          <div class="member-row"><div class="member-date"><strong>13</strong><small>OCT</small></div><div class="member-row-info"><strong>Yoga & Mobility</strong><p>Trainer: Priya Kumar · Studio C</p></div><span class="member-row-time">07:00 AM</span></div>
+        </section><section class="panel searchable"><div class="panel-heading"><div><h3>Today's Nutrition</h3><p>Sample daily nutrition summary</p></div><button class="btn btn-outline" data-goto="nutrition">View Plan</button></div>
+          <div class="member-row"><span class="activity-icon">🥗</span><div class="member-row-info"><strong>Calories</strong><p>1,420 of 2,200 kcal</p><div class="member-progress"><span style="width:64%"></span></div></div></div>
+          <div class="member-row"><span class="activity-icon">💧</span><div class="member-row-info"><strong>Water intake</strong><p>1.8 of 2.5 litres</p><div class="member-progress"><span style="width:72%"></span></div></div></div>
+          <div class="member-row"><span class="activity-icon">🍳</span><div class="member-row-info"><strong>Protein</strong><p>82 of 120 grams</p><div class="member-progress"><span style="width:68%"></span></div></div></div>
+        </section></div>
+        ${tablePanel("Recent Workouts","Your latest training sessions",["Workout","Date","Duration","Calories","Status"],rows)}`;
+    },
+    profile() {
+      return `${sectionHeading("Personal Information","View and update your member profile")}<section class="panel"><form id="profileForm"><div class="member-profile-grid"><div class="member-field"><label for="memberName">Full Name</label><input id="memberName" value="${escapeHTML(username)}" required></div><div class="member-field"><label for="memberEmail">Email Address</label><input id="memberEmail" type="email" value="member@example.com" required></div><div class="member-field"><label for="memberPhone">Phone Number</label><input id="memberPhone" type="tel" placeholder="Enter phone number"></div><div class="member-field"><label for="memberGoal">Fitness Goal</label><select id="memberGoal"><option>Build muscle</option><option>Lose weight</option><option>Improve endurance</option><option>Stay active</option></select></div></div><p class="member-note">Profile changes in this demo are stored in the current browser session only.</p><div style="margin-top:20px"><button class="btn" type="submit">Save Profile</button></div></form></section>`;
+    },
+    workouts() {
+      const plans=[["🏋","Strength Builder","4 days/week · Intermediate","Build strength with a progressive training routine."],["🏃","Cardio & Endurance","3 days/week · All levels","Improve stamina with balanced cardio sessions."],["🧘","Mobility & Core","3 days/week · Beginner","Improve stability, mobility, and flexibility."]];
+      return `${sectionHeading("My Workout Plans","Choose a training routine to match your goal")}<div class="cards-grid">${plans.map(p=>`<article class="info-card searchable"><div class="card-icon">${p[0]}</div><h3>${p[1]}</h3><p>${p[2]}</p><p style="margin-top:10px">${p[3]}</p><div class="card-foot"><button class="btn start-workout">Start Workout</button></div></article>`).join("")}</div>`;
+    },
+    classes() {
+      const list=[["🔥","HIIT Workout","Sarah Lee","Saturday · 06:30 PM","18 / 20 spots"],["🏋","Strength Training","Alex Morgan","Saturday · 08:00 AM","14 / 20 spots"],["🧘","Yoga & Mobility","Priya Kumar","Tuesday · 07:00 AM","12 / 18 spots"],["🚴","Indoor Cycling","Daniel Lewis","Wednesday · 06:30 PM","16 / 20 spots"],["🥊","Boxing Fitness","Mia Walker","Thursday · 05:30 PM","10 / 15 spots"],["💪","Core & Mobility","James Hall","Friday · 10:00 AM","9 / 16 spots"]];
+      return `${sectionHeading("Available Fitness Classes","Browse sessions and reserve a place")}<div class="cards-grid">${list.map(c=>`<article class="info-card searchable"><div class="card-icon">${c[0]}</div><h3>${c[1]}</h3><p>Trainer: ${c[2]}</p><p style="margin-top:7px">${c[3]}</p><div class="card-foot"><span class="status active">${c[4]}</span><div style="margin-top:13px"><button class="btn book-class">Book Class</button></div></div></article>`).join("")}</div>`;
+    },
+    schedule() {
+      return `${sectionHeading("Upcoming Schedule","Your upcoming classes and training sessions","＋ Add to Calendar")}<section class="table-panel searchable"><div class="table-wrap"><table><thead><tr><th>Date</th><th>Class</th><th>Trainer</th><th>Time</th><th>Status</th></tr></thead><tbody><tr class="searchable"><td>Oct 10, 2026</td><td>Strength Training</td><td>Alex Morgan</td><td>08:00 AM</td><td><span class="status active">Confirmed</span></td></tr><tr class="searchable"><td>Oct 11, 2026</td><td>HIIT Workout</td><td>Sarah Lee</td><td>06:30 PM</td><td><span class="status active">Confirmed</span></td></tr><tr class="searchable"><td>Oct 13, 2026</td><td>Yoga & Mobility</td><td>Priya Kumar</td><td>07:00 AM</td><td><span class="status pending">Upcoming</span></td></tr><tr class="searchable"><td>Oct 15, 2026</td><td>Indoor Cycling</td><td>Daniel Lewis</td><td>06:30 PM</td><td><span class="status pending">Upcoming</span></td></tr></tbody></table></div></section>`;
+    },
+    nutrition() {
+      const items=[["🥗","Calories","1,420 / 2,200 kcal",64],["🍳","Protein","82 / 120 g",68],["💧","Water","1.8 / 2.5 L",72]];
+      return `${sectionHeading("Nutrition Overview","Sample daily nutrition targets")}<div class="member-nutrition-grid">${items.map(n=>`<article class="member-nutrition searchable"><div class="card-icon">${n[0]}</div><strong>${n[2]}</strong><p>${n[1]}</p><div class="member-progress"><span style="width:${n[3]}%"></span></div></article>`).join("")}</div><section class="panel" style="margin-top:22px"><div class="panel-heading"><div><h3>Daily Meal Plan</h3><p>Example meal schedule</p></div></div><div class="member-row"><span class="activity-icon">🍳</span><div class="member-row-info"><strong>Breakfast</strong><p>Oats, fruit, and a protein source</p></div><span class="member-row-time">08:00 AM</span></div><div class="member-row"><span class="activity-icon">🥗</span><div class="member-row-info"><strong>Lunch</strong><p>Balanced meal with vegetables and protein</p></div><span class="member-row-time">01:00 PM</span></div><div class="member-row"><span class="activity-icon">🍎</span><div class="member-row-info"><strong>Snack</strong><p>Fruit or another suitable snack</p></div><span class="member-row-time">04:00 PM</span></div><div class="member-row"><span class="activity-icon">🍲</span><div class="member-row-info"><strong>Dinner</strong><p>Balanced evening meal</p></div><span class="member-row-time">07:30 PM</span></div><p class="member-note">Nutrition figures and meals are illustrative examples, not personalized medical advice.</p></section>`;
+    },
+    progress() {
+      return `${sectionHeading("Fitness Progress","Track your activity and completed milestones")}<div class="stats-grid">${statCard("🏋","Workouts This Month","24","+12%","Compared with last month")}${statCard("🔥","Calories Burned","8,450","+8.5%","Sample monthly total")}${statCard("◷","Training Hours","18.5","On track","Sample activity time")}${statCard("🎯","Monthly Goal","72%","+10%","18 of 25 workouts")}</div><section class="panel searchable" style="margin-top:22px"><div class="panel-heading"><div><h3>Weekly Activity</h3><p>Minutes completed compared with your daily target</p></div></div><div class="member-chart">${[[55,40],[35,40],[75,60],[48,40],[85,60],[65,60],[30,40]].map(b=>`<div class="member-bar-group"><div class="member-bar" style="height:${b[0]}%"></div><div class="member-bar dark" style="height:${b[1]}%"></div></div>`).join("")}</div><div class="member-chart-labels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div></section><section class="panel" style="margin-top:22px"><div class="panel-heading"><div><h3>Milestones</h3><p>Sample fitness achievements</p></div></div><div class="member-row"><span class="activity-icon">🏅</span><div class="member-row-info"><strong>10 workouts completed</strong><p>Consistency milestone reached</p></div><span class="status completed">Achieved</span></div><div class="member-row"><span class="activity-icon">🔥</span><div class="member-row-info"><strong>5,000 calories burned</strong><p>Monthly activity milestone</p></div><span class="status completed">Achieved</span></div></section>`;
+    },
+    payments() {
+      const rows=[["INV-2026-010","Oct 01, 2026","Gold Membership","₹1,499","Paid"],["INV-2026-009","Sep 01, 2026","Gold Membership","₹1,499","Paid"],["INV-2026-008","Aug 01, 2026","Gold Membership","₹1,499","Paid"]];
+      return `${sectionHeading("Membership & Payments","Review your sample membership billing history")}<div class="stats-grid">${statCard("★","Current Plan","Gold","Premium","Sample membership tier")}${statCard("₹","Monthly Fee","₹1,499","Paid","Illustrative subscription")}${statCard("✓","Payment Status","Active","Up to date","Sample account status")}${statCard("◷","Next Renewal","Nov 01","Upcoming","Sample renewal date")}</div>${tablePanel("Payment History","Sample transactions only",["Invoice","Date","Description","Amount","Status"],rows.map(r=>`<tr class="searchable">${r.slice(0,4).map(v=>`<td>${v}</td>`).join("")}<td><span class="status paid">${r[4]}</span></td></tr>`))}<p class="member-note">No real payment processing is connected to this demo dashboard.</p>`;
+    },
+    settings() {
+      return `${sectionHeading("Account Settings","Manage your profile and notification preferences")}<section class="panel"><form id="settingsForm"><div class="member-profile-grid"><div class="member-field"><label for="settingEmail">Email Address</label><input id="settingEmail" type="email" value="member@example.com"></div><div class="member-field"><label for="settingTimezone">Time Zone</label><select id="settingTimezone"><option>Asia/Kolkata</option><option>UTC</option><option>Asia/Singapore</option></select></div></div><div style="margin-top:20px;display:grid;gap:14px;font-size:12px"><label><input type="checkbox" checked> Receive class and workout reminders</label><label><input type="checkbox" checked> Receive weekly progress updates</label></div><p class="member-note">Settings are for this UI demo and are not sent to a server.</p><div style="margin-top:20px"><button class="btn" type="submit">Save Settings</button></div></form></section>`;
+    }
+  };
+
+  function renderPage(page) {
+    if (!templates[page]) page = "dashboard";
+    pageTitle.textContent = pageMeta[page][0];
+    pageSubtitle.textContent = pageMeta[page][1];
+    document.querySelectorAll(".nav-link[data-page]").forEach(link => link.classList.toggle("active", link.dataset.page === page));
+    pageContent.innerHTML = templates[page]();
+    search.value = "";
+    sidebar.classList.remove("open");
+    overlay.classList.remove("show");
+    const profileForm = document.getElementById("profileForm");
+    if (profileForm) profileForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      username = document.getElementById("memberName").value.trim() || username;
+      sessionStorage.setItem("loginUsername", username);
+      localStorage.setItem("loginUsername", username);
+      syncUser();
+      renderPage("profile");
+      notify("Profile updated successfully.");
+    });
+    const settingsForm = document.getElementById("settingsForm");
+    if (settingsForm) settingsForm.addEventListener("submit", event => { event.preventDefault(); notify("Settings saved for this demo."); });
+    pageContent.querySelectorAll("[data-goto]").forEach(button => button.addEventListener("click", () => renderPage(button.dataset.goto)));
+    pageContent.querySelectorAll(".start-workout").forEach(button => button.addEventListener("click", () => notify("Workout started! (Demo action)")));
+    pageContent.querySelectorAll(".book-class").forEach(button => button.addEventListener("click", () => { button.textContent = "Booked"; button.disabled = true; notify("Class booked successfully (demo)."); }));
+  }
+  let toastTimer;
+  function notify(message) {
+    let toast = document.getElementById("dashboardToast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "dashboardToast";
+      toast.style.cssText = "position:fixed;right:24px;bottom:24px;z-index:200;background:#111;color:#fff;border-left:4px solid #DEFB02;padding:14px 18px;border-radius:9px;box-shadow:0 10px 30px #0002;font-size:12px;";
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.style.display = "block";
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.style.display = "none", 2600);
+  }
+  function logout() {
+    sessionStorage.removeItem("loginUsername");
+    sessionStorage.removeItem("username");
+    window.location.href = "login.html";
+  }
+  document.getElementById("sidebarNav").addEventListener("click", event => {
+    const button = event.target.closest("[data-page]");
+    if (button) renderPage(button.dataset.page);
+  });
+  pageContent.addEventListener("click", event => {
+    const button = event.target.closest(".go-404");
+    if (button) window.location.href = "404.html";
+  });
+  search.addEventListener("input", function() {
+    const query = search.value.trim().toLowerCase();
+    let count = 0;
+    pageContent.querySelectorAll(".searchable").forEach(item => {
+      const matches = item.textContent.toLowerCase().includes(query);
+      item.classList.toggle("search-hidden", !matches);
+      if (matches) count++;
+    });
+    pageContent.querySelectorAll(".table-panel").forEach(panel => {
+      const rows = panel.querySelectorAll("tbody tr.searchable");
+      const empty = panel.querySelector(".empty-search");
+      if (empty && rows.length) empty.style.display = Array.from(rows).some(row => !row.classList.contains("search-hidden")) ? "none" : "block";
+    });
+  });
+  document.getElementById("topLogout").addEventListener("click", logout);
+  document.getElementById("sidebarLogout").addEventListener("click", logout);
+  document.getElementById("menuToggle").addEventListener("click", () => { sidebar.classList.toggle("open"); overlay.classList.toggle("show"); });
+  overlay.addEventListener("click", () => { sidebar.classList.remove("open"); overlay.classList.remove("show"); });
+  renderPage("dashboard");
+});
+</script>
+</body>
+</html>
